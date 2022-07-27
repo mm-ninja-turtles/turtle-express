@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "bulbasaur-express": "workspace:^0.0.0",
+    "bulbasaur-express": "workspace:*",
     "express": "^4.18.1",
     "nodemon": "^2.0.19",
     "ts-node": "^10.9.1",

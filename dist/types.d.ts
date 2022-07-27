@@ -21,7 +21,11 @@ export interface SetupOptions {
 /** Options for each custom handlers. */
 export interface HandlerOptions {
     method: Method;
-    resolver: <R extends unknown>() => Promise<R>;
+    /**
+     * TODO: new `response` handler option type (hint: might require zod)
+     * TODO: infer resolver response type from `response` handler option
+     */
+    resolver: <R>() => R | Promise<R>;
 }
 export interface RouterOptions {
 }

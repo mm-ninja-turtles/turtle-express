@@ -28,7 +28,15 @@ export function createPath(
       })
     },
     /**
-     *
+     * Generate a sub path object base on the parent `path`.
+     * 
+     * example:
+     * ```ts
+     * const users = router.path('/users')
+     * const usersId = users.path('/:id')
+     * // will generate /users/:id
+     * ```
+     * 
      * @param subPath
      * @param subPathOptions
      * @returns

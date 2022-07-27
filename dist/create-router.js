@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createRouter = void 0;
+const create_path_1 = require("./create-path");
 function createRouter(router, routerOptions) {
     return {
         /** Express's `use` function. */
@@ -45,10 +46,35 @@ function createRouter(router, routerOptions) {
             // bind router to express app
             expressApp.use(router);
         },
+        /**
+         * Generate a path object to bind with router setup function.
+         *
+         * example:
+         * ```ts
+         * const app = express()
+         * const router = createRouter(Router())
+         *
+         * const users = router.path('/users')
+         *
+         * users.handler({
+         *  method: 'get',
+         *  resolver() {
+         *   return 'users'
+         *  }
+         * })
+         *
+         * router.setup(app, {
+         *  paths: [users.meta]
+         * })
+         * ```
+         *
+         * @param path
+         * @param pathOptions
+         */
+        path(path, pathOptions) {
+            return (0, create_path_1.createPath)(router, path, pathOptions);
+        }
     };
-    // function path(path: TRouteLiteral, pathOptions: PathOptions) {
-    //   return createRoutePath(router, path, pathOptions)
-    // }
 }
 exports.createRouter = createRouter;
 //# sourceMappingURL=create-router.js.map

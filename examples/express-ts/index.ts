@@ -1,5 +1,5 @@
 import express,{ Router } from 'express'
-import { createRouter, createPath } from 'bulbasaur-express'
+import { createRouter } from 'bulbasaur-express'
 
 const port = 8080
 const app = express()
@@ -7,11 +7,12 @@ const _router = Router()
 
 const router = createRouter(_router)
 
-const hello = createPath(_router, '/hello')
+const hello = router.path( '/hello')
+
 hello.handler({
   method: 'get',
   resolver() {
-    return 'Hello World!' as any
+    return 'Hello World!' 
   }
 })
 

@@ -1,5 +1,6 @@
 import type { Express, Router, RequestHandler } from 'express'
-import type { RouterOptions, SetupOptions } from './types'
+import { createPath } from './create-path'
+import type { PathOptions, Route, RouterOptions, SetupOptions } from './types'
 
 export function createRouter(router: Router, routerOptions?: RouterOptions) {
   return {
@@ -42,9 +43,33 @@ export function createRouter(router: Router, routerOptions?: RouterOptions) {
       // bind router to express app
       expressApp.use(router)
     },
+    /**
+     * Generate a path object to bind with router setup function.
+     * 
+     * example:
+     * ```ts
+     * const app = express()
+     * const router = createRouter(Router())
+     * 
+     * const users = router.path('/users')
+     * 
+     * users.handler({
+     *  method: 'get',
+     *  resolver() {
+     *   return 'users'
+     *  }
+     * })
+     * 
+     * router.setup(app, {
+     *  paths: [users.meta]
+     * })
+     * ```
+     * 
+     * @param path 
+     * @param pathOptions 
+     */
+    path(path: Route, pathOptions?: PathOptions) {
+      return createPath(router, path, pathOptions)
+    }
   }
-
-  // function path(path: TRouteLiteral, pathOptions: PathOptions) {
-  //   return createRoutePath(router, path, pathOptions)
-  // }
 }
