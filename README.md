@@ -13,7 +13,6 @@ Also support for `api-client-sdk` generation for front-end.
   - [fastify](https://fastify.js.org/) *
   - [openapi-generator](https://openapi-generator.tech/) *
   - [swagger-ui](https://swagger.io/) *
-  - [api-client-sdk](https://api-client-sdk.js.org/) *
 
 ## How to run the project with examples.
 
