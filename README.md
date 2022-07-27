@@ -18,7 +18,7 @@ Also support for `api-client-sdk` generation for front-end.
 
 1. `pnpm i`
 2. `pnpm run build:watch`
-3. `pnpm run start --filter express-ts`
+3. `pnpm --filter express-ts run start`
 
 ## Contributing
 
