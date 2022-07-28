@@ -2,79 +2,32 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createRouter = void 0;
 const create_path_1 = require("./create-path");
-function createRouter(router, routerOptions) {
-    return {
-        /** Express's `use` function. */
-        use(...handlers) {
-            return router.use(...handlers);
-        },
-        /**
-         * Setup router with express app instance and bind paths to the router.
-         *
-         * @param expressApp
-         * @param setupOptions
-         *
-         * example:
-         * ```ts
-         * import express, { Router } from 'express'
-         * const app = express()
-         * const router = createRouter(Router())
-         * const users = router.path('/users')
-         * ...
-         * router.setup(app, {
-         *   paths: [users]
-         * })
-         * ```
-         */
-        setup(expressApp, setupOptions = { paths: [] }) {
-            const { paths } = setupOptions;
-            // bind paths and handlers to the router
-            paths === null || paths === void 0 ? void 0 : paths.forEach((meta) => {
-                meta.handlers.forEach(({ method, handler }) => {
-                    if (method === 'get')
-                        router.get(meta.path, handler);
-                    if (method === 'post')
-                        router.post(meta.path, handler);
-                    if (method === 'put')
-                        router.put(meta.path, handler);
-                    if (method === 'patch')
-                        router.patch(meta.path, handler);
-                    if (method === 'delete')
-                        router.delete(meta.path, handler);
-                });
+function createRouter(router) {
+    const use = (...handlers) => router.use(...handlers);
+    const path = (path, options) => (0, create_path_1.createPath)(router, path, options);
+    const setup = (expressApp, options) => {
+        const { paths } = options;
+        paths.forEach((eachPath) => {
+            const { _path, _handlerColl } = eachPath;
+            _handlerColl.forEach((eachHandler) => {
+                const { method, handler } = eachHandler;
+                if (method === 'get')
+                    return router.get(_path, handler);
+                else if (method === 'post')
+                    return router.post(_path, handler);
+                else if (method === 'put')
+                    return router.put(_path, handler);
+                else if (method === 'patch')
+                    return router.patch(_path, handler);
+                else if (method === 'delete')
+                    return router.delete(_path, handler);
+                else
+                    throw new Error(`Unknown method: ${method}`);
             });
-            // bind router to express app
-            expressApp.use(router);
-        },
-        /**
-         * Generate a path object to bind with router setup function.
-         *
-         * example:
-         * ```ts
-         * const app = express()
-         * const router = createRouter(Router())
-         *
-         * const users = router.path('/users')
-         *
-         * users.handler({
-         *  method: 'get',
-         *  resolver() {
-         *   return 'users'
-         *  }
-         * })
-         *
-         * router.setup(app, {
-         *  paths: [users.meta]
-         * })
-         * ```
-         *
-         * @param path
-         * @param pathOptions
-         */
-        path(path, pathOptions) {
-            return (0, create_path_1.createPath)(router, path, pathOptions);
-        }
+        });
+        expressApp.use(router);
     };
+    return { use, path, setup };
 }
 exports.createRouter = createRouter;
 //# sourceMappingURL=create-router.js.map

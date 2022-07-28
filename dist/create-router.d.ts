@@ -1,27 +1,13 @@
 import type { Express, Router, RequestHandler } from 'express';
-import type { PathOptions, Route, RouterOptions, SetupOptions } from './types';
-export declare function createRouter(router: Router, routerOptions?: RouterOptions): {
+import type { PathFunction, PathReturnType } from './create-path';
+export declare type UseFunction = (...handlers: RequestHandler[]) => Router;
+export interface SetupOptions {
+    paths: PathReturnType[];
+}
+export declare type SetupFunction = (expressApp: Express, options: SetupOptions) => void;
+export interface CreateRouterReturnType {
     /** Express's `use` function. */
-    use(...handlers: RequestHandler[]): Router;
-    /**
-     * Setup router with express app instance and bind paths to the router.
-     *
-     * @param expressApp
-     * @param setupOptions
-     *
-     * example:
-     * ```ts
-     * import express, { Router } from 'express'
-     * const app = express()
-     * const router = createRouter(Router())
-     * const users = router.path('/users')
-     * ...
-     * router.setup(app, {
-     *   paths: [users]
-     * })
-     * ```
-     */
-    setup(expressApp: Express, setupOptions?: SetupOptions): void;
+    use: UseFunction;
     /**
      * Generate a path object to bind with router setup function.
      *
@@ -47,10 +33,26 @@ export declare function createRouter(router: Router, routerOptions?: RouterOptio
      * @param path
      * @param pathOptions
      */
-    path(path: Route, pathOptions?: PathOptions): {
-        meta: import("./types").Meta;
-        handler(handlerOptions: import("./types").HandlerOptions): void;
-        path(subPath: `/${string}`, subPathOptions: PathOptions): any;
-    };
-};
+    path: PathFunction;
+    /**
+     * Setup router with express app instance and bind paths to the router.
+     *
+     * @param expressApp
+     * @param setupOptions
+     *
+     * example:
+     * ```ts
+     * import express, { Router } from 'express'
+     * const app = express()
+     * const router = createRouter(Router())
+     * const users = router.path('/users')
+     * ...
+     * router.setup(app, {
+     *   paths: [users]
+     * })
+     * ```
+     */
+    setup: SetupFunction;
+}
+export declare function createRouter(router: Router): CreateRouterReturnType;
 //# sourceMappingURL=create-router.d.ts.map

@@ -1,3 +1,18 @@
 export { createRouter } from './create-router'
 
-export type { Method, RouterOptions, PathOptions, HandlerOptions, Meta, Route, SetupOptions } from './types'
+export type { Method } from './types'
+export type {
+  UseFunction,
+  SetupFunction,
+  SetupOptions,
+  CreateRouterReturnType,
+} from './create-router'
+export type {
+  Handler,
+  HandlerOptions,
+  Path,
+  PathFunction,
+  PathOptions,
+  PathReturnType,
+  Resolver,
+} from './create-path'
