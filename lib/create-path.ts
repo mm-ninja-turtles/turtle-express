@@ -1,49 +1,114 @@
-import type { Router } from 'express'
-import type { HandlerOptions, Meta, PathOptions, Route } from './types'
+import type { Router, RequestHandler } from 'express'
+import type { Method } from './types'
+
+export type Path = `/${string}`
+export type PathFunction = (path: Path, options?: PathOptions) => PathReturnType
+export interface PathOptions {}
+
+export interface PathReturnType {
+  /** Current path */
+  _path: Path
+  /** Collection of handlers meta data created from `handler()` function. */
+  _handlerColl: HandlerMeta[]
+  /**
+   * Handler function. Create a express request handler function from `resolver` function
+   * and bind it to the current path handler collection array, which will then be used
+   * inside the setup function.
+   *
+   * usage:
+   * ```ts
+   * const router = createRouter(Router())
+   * const hello = router.path('/hello') // create a `/hello` path
+   *
+   * hello.handler({
+   *   method: 'get',
+   *   resolver() {
+   *     return 'hello world'
+   *   }
+   * })
+   * ```
+   */
+  handler: Handler
+  /**
+   * Path function. Create a sub path function from the current path.
+   *
+   * usage:
+   * ```ts
+   * const router = createRouter(Router())
+   * const hello = router.path('/hello') // create a `/hello` path
+   *
+   * hello.handler({
+   *   method: 'get',
+   *   resolver() {
+   *     return 'hello world'
+   *   }
+   * })
+   *
+   * const helloWithName = hello.path('/:name') // create a `/hello/:name` path
+   * helloWithName.handler({
+   *   method: 'get',
+   *   params: z.object({ name: z.string() }),
+   *   resolver({ ctx }) {
+   *     return `hello ${ctx.params.name}`
+   *   }
+   * })
+   */
+  path: PathFunction
+}
+
+export interface HandlerMeta {
+  method: Method
+  handler: RequestHandler
+}
+
+/**
+ * Resolver function. Create a express request handler function from `resolver` function.
+ */
+export type Resolver = <R>() => R | Promise<R>
+
+export interface HandlerOptions {
+  method: Method
+  resolver: Resolver
+}
+
+export type Handler = (options: HandlerOptions) => void
 
 export function createPath(
   router: Router,
-  path: Route,
-  pathOptions?: PathOptions,
-) {
-  const meta: Meta = { path, handlers: [] }
+  path: Path,
+  options?: PathOptions,
+): PathReturnType {
+  // handlers collection
+  // keep track of all handlers for the provided path
+  const handlerColl: HandlerMeta[] = []
+
+  // create a handler function to bind to the router
+  const handler: Handler = (options) => {
+    const { method, resolver } = options
+    // create new handler collection object
+    const handlerMeta: HandlerMeta = {
+      method,
+      // handler function
+      handler: async (request, response) => {
+        const resolverResult = await resolver()
+        response.send(resolverResult)
+      },
+    }
+    // push to the handler tracker collection
+    handlerColl.push(handlerMeta)
+  }
+
+  // create a new sub-path base on the current path function to bind to the router
+  const subPath: PathFunction = (subPath, options) => {
+    const newPath = `${path}${subPath}` as Path
+    return createPath(router, newPath, options)
+  }
 
   return {
-    /**
-     * Path meta data for router to use.
-     */
-    meta,
-    /**
-     * @param handlerOptions
-     */
-    handler(handlerOptions: HandlerOptions) {
-      const { method, resolver } = handlerOptions
-
-      meta.handlers.push({
-        method,
-        async handler(req, res) {
-          const resolved = await resolver()
-          res.json(resolved)
-        },
-      })
-    },
-    /**
-     * Generate a sub path object base on the parent `path`.
-     * 
-     * example:
-     * ```ts
-     * const users = router.path('/users')
-     * const usersId = users.path('/:id')
-     * // will generate /users/:id
-     * ```
-     * 
-     * @param subPath
-     * @param subPathOptions
-     * @returns
-     */
-    path(subPath: Route, subPathOptions: PathOptions) {
-      const newPath = `${path}${subPath}` as Route
-      return createPath(router, newPath, subPathOptions)
-    },
+    // returns starts with _ are only for internal use
+    _path: path,
+    _handlerColl: handlerColl,
+    handler,
+    path: subPath,
   }
 }

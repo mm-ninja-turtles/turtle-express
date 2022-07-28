@@ -1,4 +1,4 @@
-import express,{ Router } from 'express'
+import express, { Router } from 'express'
 import { createRouter } from 'bulbasaur-express'
 
 const port = 8080
@@ -7,17 +7,35 @@ const _router = Router()
 
 const router = createRouter(_router)
 
-const hello = router.path( '/hello')
+const hello = router.path('/hello')
 
 hello.handler({
   method: 'get',
   resolver() {
-    return 'Hello World!' 
-  }
+    return 'Hello World!' as any
+  },
+})
+
+hello.handler({
+  method: 'post',
+  resolver() {
+    return {
+      message: 'Hello World! created.',
+    } as any
+  },
+})
+
+const helloWithName = hello.path('/:name')
+
+helloWithName.handler({
+  method: 'get',
+  resolver() {
+    return `Hello Name!` as any
+  },
 })
 
 router.setup(app, {
-  paths: [hello.meta]
+  paths: [hello, helloWithName],
 })
 
 app.listen(port, () => {

@@ -10,46 +10,36 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createPath = void 0;
-function createPath(router, path, pathOptions) {
-    const meta = { path, handlers: [] };
+function createPath(router, path, options) {
+    // handlers collection
+    // keep track of all handlers for the provided path
+    const handlerColl = [];
+    // create a handler function to bind to the router
+    const handler = (options) => {
+        const { method, resolver } = options;
+        // create new handler collection object
+        const handlerMeta = {
+            method,
+            // handler function
+            handler: (request, response) => __awaiter(this, void 0, void 0, function* () {
+                const resolverResult = yield resolver();
+                response.send(resolverResult);
+            }),
+        };
+        // push to the handler tracker collection
+        handlerColl.push(handlerMeta);
+    };
+    // create a new sub-path base on the current path function to bind to the router
+    const subPath = (subPath, options) => {
+        const newPath = `${path}${subPath}`;
+        return createPath(router, newPath, options);
+    };
     return {
-        /**
-         * Path meta data for router to use.
-         */
-        meta,
-        /**
-         * @param handlerOptions
-         */
-        handler(handlerOptions) {
-            const { method, resolver } = handlerOptions;
-            meta.handlers.push({
-                method,
-                handler(req, res) {
-                    return __awaiter(this, void 0, void 0, function* () {
-                        const resolved = yield resolver();
-                        res.json(resolved);
-                    });
-                },
-            });
-        },
-        /**
-         * Generate a sub path object base on the parent `path`.
-         *
-         * example:
-         * ```ts
-         * const users = router.path('/users')
-         * const usersId = users.path('/:id')
-         * // will generate /users/:id
-         * ```
-         *
-         * @param subPath
-         * @param subPathOptions
-         * @returns
-         */
-        path(subPath, subPathOptions) {
-            const newPath = `${path}${subPath}`;
-            return createPath(router, newPath, subPathOptions);
-        },
+        // returns starts with _ are only for internal use
+        _path: path,
+        _handlerColl: handlerColl,
+        handler,
+        path: subPath,
     };
 }
 exports.createPath = createPath;
