@@ -1,5 +1,5 @@
-import type { Router, RequestHandler } from 'express'
-import type { Method } from './types'
+import type { Router } from 'express'
+import type { Handler, HandlerMeta } from './create-handler'
 
 export type Path = `/${string}`
 export type PathFunction = (path: Path, options?: PathOptions) => PathReturnType
@@ -55,23 +55,6 @@ export interface PathReturnType {
    */
   path: PathFunction
 }
-
-export interface HandlerMeta {
-  method: Method
-  handler: RequestHandler
-}
-
-/**
- * Resolver function. Create a express request handler function from `resolver` function.
- */
-export type Resolver = <R>() => R | Promise<R>
-
-export interface HandlerOptions {
-  method: Method
-  resolver: Resolver
-}
-
-export type Handler = (options: HandlerOptions) => void
 
 export function createPath(
   router: Router,
