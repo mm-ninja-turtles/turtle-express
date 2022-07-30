@@ -1,5 +1,6 @@
 import express, { Router } from 'express'
 import { createRouter } from 'bulbasaur-express'
+import { z } from 'zod'
 
 const port = 8080
 const app = express()
@@ -11,17 +12,35 @@ const hello = router.path('/hello')
 
 hello.handler({
   method: 'get',
+  response: {
+    200: z.string({}),
+  },
   resolver() {
-    return 'Hello World!' as any
+    return { 200: 'Hello' }
   },
 })
 
 hello.handler({
   method: 'post',
+  response: {
+    200: z.object({
+      age: z.number(),
+    }),
+    400: z.object({
+      message: z.string(),
+    }),
+  },
   resolver() {
+    const rand = Math.random()
+
+    if (rand > 0.5)
+      return {
+        400: { message: 'Bad Request' },
+      }
+
     return {
-      message: 'Hello World! created.',
-    } as any
+      200: { age: 20 },
+    }
   },
 })
 
@@ -29,13 +48,38 @@ const helloWithName = hello.path('/:name')
 
 helloWithName.handler({
   method: 'get',
+  response: {
+    200: z.string(),
+  },
   resolver() {
-    return `Hello Name!` as any
+    return {
+      200: 'Hello Name!',
+    }
+  },
+})
+
+const validationTest = router.path('/validation')
+
+validationTest.handler({
+  method: 'get',
+  response: {
+    200: z.object({
+      email: z.string().email(),
+      password: z.number(),
+    }),
+  },
+  resolver() {
+    return {
+      200: {
+        email: 'joshua@gmail',
+        password: 123,
+      },
+    }
   },
 })
 
 router.setup(app, {
-  paths: [hello, helloWithName],
+  paths: [hello, helloWithName, validationTest],
 })
 
 app.listen(port, () => {

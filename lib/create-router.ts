@@ -1,5 +1,6 @@
 import type { Express, Router, RequestHandler } from 'express'
-import type { PathFunction, PathReturnType } from './create-path'
+import type { Path, PathOptions, PathReturnType } from './create-path'
+
 import { createPath } from './create-path'
 
 export type UseFunction = (...handlers: RequestHandler[]) => Router
@@ -8,13 +9,14 @@ export interface SetupOptions {
   paths: PathReturnType[]
 }
 
-export type SetupFunction = (expressApp: Express, options: SetupOptions) => void
-
 export interface CreateRouterReturnType {
   /** Express's `use` function. */
   use: UseFunction
   /**
    * Generate a path object to bind with router setup function.
+   *
+   * @param path
+   * @param pathOptions
    *
    * example:
    * ```ts
@@ -34,11 +36,8 @@ export interface CreateRouterReturnType {
    *  paths: [users.meta]
    * })
    * ```
-   *
-   * @param path
-   * @param pathOptions
    */
-  path: PathFunction
+  path: (path: Path, options?: PathOptions) => PathReturnType
   /**
    * Setup router with express app instance and bind paths to the router.
    *
@@ -57,16 +56,16 @@ export interface CreateRouterReturnType {
    * })
    * ```
    */
-  setup: SetupFunction
+  setup: (expressApp: Express, options: SetupOptions) => void
 }
 
 export function createRouter(router: Router): CreateRouterReturnType {
   const use: UseFunction = (...handlers) => router.use(...handlers)
 
-  const path: PathFunction = (path, options) =>
+  const path = (path: Path, options?: PathOptions) =>
     createPath(router, path, options)
 
-  const setup: SetupFunction = (expressApp, options) => {
+  const setup = (expressApp: Express, options: SetupOptions) => {
     const { paths } = options
 
     paths.forEach((eachPath) => {
