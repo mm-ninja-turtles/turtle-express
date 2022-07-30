@@ -1,6 +1,5 @@
 import type { Express, Router, RequestHandler } from 'express'
 import type { Path, PathOptions, PathReturnType } from './create-path'
-// import type { Response } from './response'
 
 import { createPath } from './create-path'
 

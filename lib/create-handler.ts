@@ -1,7 +1,6 @@
 import type { RequestHandler } from 'express'
 import type { z, ZodType } from 'zod'
-import type { Method } from './types'
-import type { ResponseShape } from './response'
+import type { Method, ResponseShape } from './types'
 
 export interface HandlerMeta {
   method: Method
