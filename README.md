@@ -10,7 +10,7 @@ Also support for `api-client-sdk` generation for front-end.
 - knowledge of
   - [typescript](https://www.typescriptlang.org/) *
   - [express.js](https://expressjs.com/) *
-  - [fastify](https://fastify.js.org/) *
+  - [fastify](https://www.fastify.io/) *
   - [openapi-generator](https://openapi-generator.tech/) *
   - [swagger-ui](https://swagger.io/) *
 
