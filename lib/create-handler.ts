@@ -601,9 +601,9 @@ export const createHandler = <
 			// construct context object
 			const ctx: Context<Params, Query, Body> = {
 				...optContext,
-				params: context.requestValidation.response.params.data,
-				query: context.requestValidation.response.query.data,
-				body: context.requestValidation.response.body.data,
+				params: context.requestValidation.response.params?.data,
+				query: context.requestValidation.response.query?.data,
+				body: context.requestValidation.response.body?.data,
 			}
 
 			// run the resolver function from `options`
