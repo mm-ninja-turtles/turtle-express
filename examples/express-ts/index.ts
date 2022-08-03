@@ -13,7 +13,7 @@ const hello = router.path('/hello')
 hello.handler({
 	method: 'get',
 	response: {
-		200: z.string({}),
+		200: z.string(),
 	},
 	resolver() {
 		return { 200: 'Hello' }
