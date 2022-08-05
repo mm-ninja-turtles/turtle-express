@@ -129,6 +129,14 @@ export interface HandlerOptions<
 
 	method: Method
 
+	request?: {
+		params?: Params
+
+		query?: Query
+
+		body?: Body
+	}
+
 	response: ResponseShape<
 		// #region Http Status Code Generics
 		// INFORMATION RESPONSES
@@ -202,12 +210,6 @@ export interface HandlerOptions<
 		// #endregion
 	>
 
-	params?: Params
-
-	query?: Query
-
-	body?: Body
-
 	guard?<R extends { pass: boolean; response: any }>(): R | Promise<R>
 	guard?<R extends { pass: boolean; response: any }>(ctx: Ctx): R | Promise<R>
 	guard?<R extends { pass: boolean; response: any }>(
@@ -220,11 +222,7 @@ export interface HandlerOptions<
 		res: Response,
 	): R | Promise<R>
 
-	resolver(args: {
-		ctx: Context<Params, Query, Body>
-		req: Request
-		res: Response
-	}):
+	resolver(args: { ctx: Context<Params, Query, Body>; req: Request }):
 		| ResponseShape<
 				// #region Http Status Code Generics
 				// INFORMATION RESPONSES
@@ -530,13 +528,15 @@ export const createHandler = <
 	const {
 		context: optContext,
 		method,
-		params,
-		query,
-		body,
+		request,
 		response,
 		guard,
 		resolver,
 	} = options
+
+	const params = request?.params
+	const query = request?.query
+	const body = request?.body
 
 	// handler function
 	const handler: RequestHandler = async (req, res) => {
@@ -607,7 +607,7 @@ export const createHandler = <
 			}
 
 			// run the resolver function from `options`
-			context.resolverResult = await resolver({ ctx, req, res })
+			context.resolverResult = await resolver({ ctx, req })
 			currentStep = steps.S003.on.RESOLVER_DONE
 		}
 
@@ -718,13 +718,25 @@ export const createHandler = <
 
 			// 5.2: if previous step is 'request validation', the request validation must have failed
 			else if (prevStep === steps.S002.name) {
+				const {
+					params: reqValParams,
+					query: reqValQuery,
+					body: reqValBody,
+				} = context.requestValidation.response
+
+				const error = {
+					params: reqValParams?.success === true ? null : reqValParams,
+					query: reqValQuery?.success === true ? null : reqValQuery,
+					body: reqValBody?.success === true ? null : reqValBody,
+				}
+
 				// create request validation failed response
 				context.responseInit = {
 					statusCode: 400,
 					success: false,
 					message: 'Validation Failed.',
 					data: null,
-					error: context.requestValidation.response,
+					error,
 				}
 			}
 
@@ -757,7 +769,8 @@ export const createHandler = <
 		}
 
 		// response with the safe parsed result
-		res.status(context.responseInit.statusCode).send({
+		res.status(context.responseInit.statusCode)
+		return res.send({
 			success: context.responseInit.success,
 			message: context.responseInit.message,
 			data: context.responseInit.data,
