@@ -115,7 +115,8 @@ requestValidation.handler({
 			dateOfBirth: z
 				.string()
 				.regex(/^\d\d\d\d-\d\d-\d\d$/g, {
-					message: 'dateOfBirth must be a date formate string (YYYY-MM-DD).',
+					message:
+						'dateOfBirth must be a valid date format string (YYYY-MM-DD).',
 				})
 				.transform((v) => new Date(v)),
 		}),

@@ -567,9 +567,12 @@ export const createHandler = <
 				// skip to next state if no request validations are provided
 				currentStep = steps.S002.on.REQUEST_VALIDATION_SKIPPED
 			} else {
+				// set context params value if params schema is provided
 				if (params)
 					context.paramsValidation = params.safeParse(req.params) as any
+				// set context query value if query schema is provided
 				if (query) context.queryValidation = query.safeParse(req.query) as any
+				// set context params value if params schema is provided
 				if (body) context.bodyValidation = body.safeParse(req.body) as any
 
 				const validationFailed = [
@@ -725,9 +728,11 @@ export const createHandler = <
 				} = context.requestValidation.response
 
 				const error = {
-					params: reqValParams?.success === true ? null : reqValParams,
-					query: reqValQuery?.success === true ? null : reqValQuery,
-					body: reqValBody?.success === true ? null : reqValBody,
+					params:
+						reqValParams?.success === true ? null : reqValParams.error.format(),
+					query:
+						reqValQuery?.success === true ? null : reqValQuery.error.format(),
+					body: reqValBody?.success === true ? null : reqValBody.error.format(),
 				}
 
 				// create request validation failed response
@@ -763,7 +768,10 @@ export const createHandler = <
 					success: resolverValidation.success,
 					message: 'Success.',
 					data: resolverValidation.data,
-					error: resolverValidation.error,
+					error:
+						resolverValidation.success === true
+							? null
+							: resolverValidation.error,
 				}
 			}
 		}
