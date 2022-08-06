@@ -1,3 +1,13 @@
+import fetch, { Request, Response, Headers } from 'cross-fetch'
+
+function bindFetchApi() {
+	global.fetch = fetch as any
+	global.Request = Request as any
+	global.Response = Response as any
+	global.Headers = Headers
+}
+bindFetchApi()
+
 export { createRouter } from './create-router'
 
 export type { Method } from './types'
