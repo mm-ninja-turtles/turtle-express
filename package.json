@@ -1,5 +1,5 @@
 {
-	"name": "bulbasaur-express",
+	"name": "turtle-express",
 	"description": "",
 	"version": "0.0.0",
 	"license": "MIT",
@@ -11,15 +11,17 @@
 	],
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/wai-lin/bulbasaur-express.git"
+		"url": "git+https://github.com/wai-lin/turtle-express.git"
 	},
 	"bugs": {
-		"url": "https://github.com/wai-lin/bulbasaur-express/issues"
+		"url": "https://github.com/wai-lin/turtle-express/issues"
 	},
-	"homepage": "https://github.com/wai-lin/bulbasaur-express#readme",
+	"homepage": "https://github.com/wai-lin/turtle-express#readme",
 	"keywords": [
 		"express",
-		"express-framework"
+		"express-framework",
+		"turtle-express",
+		"turtle"
 	],
 	"scripts": {
 		"pre:build": "rm -rf dist",
