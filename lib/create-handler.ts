@@ -14,10 +14,33 @@ export interface Context<
 	body: z.infer<Body>
 }
 
+export interface InternalContext {
+	isResolverUncontrolled: boolean
+}
+
 export interface HandlerMeta {
 	method: Method
 	handler: RequestHandler
 }
+
+export type ResolverArgs<
+	UncontrolledResolver extends boolean,
+	Params extends ZodType,
+	Query extends ZodType,
+	Body extends ZodType,
+	Ctx extends {},
+> = UncontrolledResolver extends true
+	? // also include express response object if user defined the resolver should be uncontrolled
+	  {
+			ctx: Ctx & Context<Params, Query, Body>
+			req: Request
+			res: Response
+	  }
+	: // only include context and request object if resolver is not uncontrolled
+	  {
+			ctx: Ctx & Context<Params, Query, Body>
+			req: Request
+	  }
 
 /**
  * ### HandlerOptions interface explanation.
@@ -53,7 +76,7 @@ export interface HandlerOptions<
 	Params extends ZodType,
 	Query extends ZodType,
 	Body extends ZodType,
-	Ctx extends Context<Params, Query, Body>,
+	Ctx extends {},
 	// #region HandlerOptions Http Status Code Generics
 	// INFORMATION RESPONSES
 	R100 extends ZodType,
@@ -124,6 +147,7 @@ export interface HandlerOptions<
 	R510 extends ZodType,
 	R511 extends ZodType,
 	// #endregion
+	UncontrolledResolver extends boolean,
 > {
 	context?: Ctx
 
@@ -137,7 +161,7 @@ export interface HandlerOptions<
 		body?: Body
 	}
 
-	response: ResponseShape<
+	response?: ResponseShape<
 		// #region Http Status Code Generics
 		// INFORMATION RESPONSES
 		R100,
@@ -216,166 +240,167 @@ export interface HandlerOptions<
 		ctx: Ctx,
 		req: Request,
 	): R | Promise<R>
-	guard?<R extends { pass: boolean; response: any }>(
-		ctx: Context<Params, Query, Body>,
-		req: Request,
-		res: Response,
-	): R | Promise<R>
 
-	resolver(args: { ctx: Context<Params, Query, Body>; req: Request }):
-		| ResponseShape<
-				// #region Http Status Code Generics
-				// INFORMATION RESPONSES
-				z.infer<R100>,
-				z.infer<R101>,
-				z.infer<R102>,
-				z.infer<R103>,
-				// SUCCESSFUL RESPONSES
-				z.infer<R200>,
-				z.infer<R201>,
-				z.infer<R202>,
-				z.infer<R203>,
-				z.infer<R204>,
-				z.infer<R205>,
-				z.infer<R206>,
-				z.infer<R207>,
-				z.infer<R208>,
-				z.infer<R226>,
-				// REDIRECTION MESSAGES
-				z.infer<R300>,
-				z.infer<R301>,
-				z.infer<R302>,
-				z.infer<R303>,
-				z.infer<R304>,
-				z.infer<R305>,
-				z.infer<R306>,
-				z.infer<R307>,
-				z.infer<R308>,
-				// CLIENT ERROR RESPONSES
-				z.infer<R400>,
-				z.infer<R401>,
-				z.infer<R402>,
-				z.infer<R403>,
-				z.infer<R404>,
-				z.infer<R405>,
-				z.infer<R406>,
-				z.infer<R407>,
-				z.infer<R408>,
-				z.infer<R409>,
-				z.infer<R410>,
-				z.infer<R411>,
-				z.infer<R412>,
-				z.infer<R413>,
-				z.infer<R414>,
-				z.infer<R415>,
-				z.infer<R416>,
-				z.infer<R417>,
-				z.infer<R418>,
-				z.infer<R421>,
-				z.infer<R422>,
-				z.infer<R423>,
-				z.infer<R424>,
-				z.infer<R425>,
-				z.infer<R426>,
-				z.infer<R428>,
-				z.infer<R429>,
-				z.infer<R431>,
-				z.infer<R451>,
-				// SERVER ERROR RESPONSES
-				z.infer<R500>,
-				z.infer<R501>,
-				z.infer<R502>,
-				z.infer<R503>,
-				z.infer<R504>,
-				z.infer<R505>,
-				z.infer<R506>,
-				z.infer<R507>,
-				z.infer<R508>,
-				z.infer<R510>,
-				z.infer<R511>
-				// #endregion
-		  >
-		| Promise<
-				ResponseShape<
-					// #region Http Status Code Generics
-					// INFORMATION RESPONSES
-					z.infer<R100>,
-					z.infer<R101>,
-					z.infer<R102>,
-					z.infer<R103>,
-					// SUCCESSFUL RESPONSES
-					z.infer<R200>,
-					z.infer<R201>,
-					z.infer<R202>,
-					z.infer<R203>,
-					z.infer<R204>,
-					z.infer<R205>,
-					z.infer<R206>,
-					z.infer<R207>,
-					z.infer<R208>,
-					z.infer<R226>,
-					// REDIRECTION MESSAGES
-					z.infer<R300>,
-					z.infer<R301>,
-					z.infer<R302>,
-					z.infer<R303>,
-					z.infer<R304>,
-					z.infer<R305>,
-					z.infer<R306>,
-					z.infer<R307>,
-					z.infer<R308>,
-					// CLIENT ERROR RESPONSES
-					z.infer<R400>,
-					z.infer<R401>,
-					z.infer<R402>,
-					z.infer<R403>,
-					z.infer<R404>,
-					z.infer<R405>,
-					z.infer<R406>,
-					z.infer<R407>,
-					z.infer<R408>,
-					z.infer<R409>,
-					z.infer<R410>,
-					z.infer<R411>,
-					z.infer<R412>,
-					z.infer<R413>,
-					z.infer<R414>,
-					z.infer<R415>,
-					z.infer<R416>,
-					z.infer<R417>,
-					z.infer<R418>,
-					z.infer<R421>,
-					z.infer<R422>,
-					z.infer<R423>,
-					z.infer<R424>,
-					z.infer<R425>,
-					z.infer<R426>,
-					z.infer<R428>,
-					z.infer<R429>,
-					z.infer<R431>,
-					z.infer<R451>,
-					// SERVER ERROR RESPONSES
-					z.infer<R500>,
-					z.infer<R501>,
-					z.infer<R502>,
-					z.infer<R503>,
-					z.infer<R504>,
-					z.infer<R505>,
-					z.infer<R506>,
-					z.infer<R507>,
-					z.infer<R508>,
-					z.infer<R510>,
-					z.infer<R511>
-					// #endregion
-				>
-		  >
+	uncontrolledResolver?: UncontrolledResolver
+
+	resolver(
+		args: ResolverArgs<UncontrolledResolver, Params, Query, Body, Ctx>,
+	): UncontrolledResolver extends true
+		? any
+		:
+				| ResponseShape<
+						// #region Http Status Code Generics
+						// INFORMATION RESPONSES
+						z.infer<R100>,
+						z.infer<R101>,
+						z.infer<R102>,
+						z.infer<R103>,
+						// SUCCESSFUL RESPONSES
+						z.infer<R200>,
+						z.infer<R201>,
+						z.infer<R202>,
+						z.infer<R203>,
+						z.infer<R204>,
+						z.infer<R205>,
+						z.infer<R206>,
+						z.infer<R207>,
+						z.infer<R208>,
+						z.infer<R226>,
+						// REDIRECTION MESSAGES
+						z.infer<R300>,
+						z.infer<R301>,
+						z.infer<R302>,
+						z.infer<R303>,
+						z.infer<R304>,
+						z.infer<R305>,
+						z.infer<R306>,
+						z.infer<R307>,
+						z.infer<R308>,
+						// CLIENT ERROR RESPONSES
+						z.infer<R400>,
+						z.infer<R401>,
+						z.infer<R402>,
+						z.infer<R403>,
+						z.infer<R404>,
+						z.infer<R405>,
+						z.infer<R406>,
+						z.infer<R407>,
+						z.infer<R408>,
+						z.infer<R409>,
+						z.infer<R410>,
+						z.infer<R411>,
+						z.infer<R412>,
+						z.infer<R413>,
+						z.infer<R414>,
+						z.infer<R415>,
+						z.infer<R416>,
+						z.infer<R417>,
+						z.infer<R418>,
+						z.infer<R421>,
+						z.infer<R422>,
+						z.infer<R423>,
+						z.infer<R424>,
+						z.infer<R425>,
+						z.infer<R426>,
+						z.infer<R428>,
+						z.infer<R429>,
+						z.infer<R431>,
+						z.infer<R451>,
+						// SERVER ERROR RESPONSES
+						z.infer<R500>,
+						z.infer<R501>,
+						z.infer<R502>,
+						z.infer<R503>,
+						z.infer<R504>,
+						z.infer<R505>,
+						z.infer<R506>,
+						z.infer<R507>,
+						z.infer<R508>,
+						z.infer<R510>,
+						z.infer<R511>
+						// #endregion
+				  >
+				| Promise<
+						ResponseShape<
+							// #region Http Status Code Generics
+							// INFORMATION RESPONSES
+							z.infer<R100>,
+							z.infer<R101>,
+							z.infer<R102>,
+							z.infer<R103>,
+							// SUCCESSFUL RESPONSES
+							z.infer<R200>,
+							z.infer<R201>,
+							z.infer<R202>,
+							z.infer<R203>,
+							z.infer<R204>,
+							z.infer<R205>,
+							z.infer<R206>,
+							z.infer<R207>,
+							z.infer<R208>,
+							z.infer<R226>,
+							// REDIRECTION MESSAGES
+							z.infer<R300>,
+							z.infer<R301>,
+							z.infer<R302>,
+							z.infer<R303>,
+							z.infer<R304>,
+							z.infer<R305>,
+							z.infer<R306>,
+							z.infer<R307>,
+							z.infer<R308>,
+							// CLIENT ERROR RESPONSES
+							z.infer<R400>,
+							z.infer<R401>,
+							z.infer<R402>,
+							z.infer<R403>,
+							z.infer<R404>,
+							z.infer<R405>,
+							z.infer<R406>,
+							z.infer<R407>,
+							z.infer<R408>,
+							z.infer<R409>,
+							z.infer<R410>,
+							z.infer<R411>,
+							z.infer<R412>,
+							z.infer<R413>,
+							z.infer<R414>,
+							z.infer<R415>,
+							z.infer<R416>,
+							z.infer<R417>,
+							z.infer<R418>,
+							z.infer<R421>,
+							z.infer<R422>,
+							z.infer<R423>,
+							z.infer<R424>,
+							z.infer<R425>,
+							z.infer<R426>,
+							z.infer<R428>,
+							z.infer<R429>,
+							z.infer<R431>,
+							z.infer<R451>,
+							// SERVER ERROR RESPONSES
+							z.infer<R500>,
+							z.infer<R501>,
+							z.infer<R502>,
+							z.infer<R503>,
+							z.infer<R504>,
+							z.infer<R505>,
+							z.infer<R506>,
+							z.infer<R507>,
+							z.infer<R508>,
+							z.infer<R510>,
+							z.infer<R511>
+							// #endregion
+						>
+				  >
 }
 
 export const createHandler = <
 	Params extends ZodType,
 	Query extends ZodType,
 	Body extends ZodType,
-	Ctx extends Context<Params, Query, Body>,
+	Ctx extends {},
 	// #region HandlerOptions Http Status Code Generics
 	// INFORMATION RESPONSES
 	R100 extends ZodType,
@@ -446,6 +471,7 @@ export const createHandler = <
 	R510 extends ZodType,
 	R511 extends ZodType,
 	// #endregion
+	UncontrolledResolver extends boolean,
 >(
 	options: HandlerOptions<
 		Params,
@@ -520,17 +546,19 @@ export const createHandler = <
 		R507,
 		R508,
 		R510,
-		R511
+		R511,
 		// #endregion
+		UncontrolledResolver
 	>,
 ): HandlerMeta => {
 	// extract handler options fields
 	const {
-		context: optContext,
+		context: optContext = {},
 		method,
 		request,
 		response,
 		guard,
+		uncontrolledResolver = false,
 		resolver,
 	} = options
 
@@ -549,7 +577,7 @@ export const createHandler = <
 			prevStep = steps.S001.name
 
 			if (guard) {
-				context.guardResult = await guard(optContext!, req, res)
+				context.guardResult = await guard(optContext as any, req)
 				currentStep = context.guardResult.pass
 					? steps.S001.on.GUARD_PASSED
 					: steps.S001.on.GUARD_FAILED
@@ -563,10 +591,13 @@ export const createHandler = <
 		if (currentStep === steps.S002.name) {
 			prevStep = steps.S002.name
 
+			// skip to next state if no request validations are provided
 			if ([params, query, body].every((v) => v === undefined)) {
-				// skip to next state if no request validations are provided
 				currentStep = steps.S002.on.REQUEST_VALIDATION_SKIPPED
-			} else {
+			}
+
+			// run the request validations if one request schema exists
+			else {
 				// set context params value if params schema is provided
 				if (params)
 					context.paramsValidation = params.safeParse(req.params) as any
@@ -575,16 +606,20 @@ export const createHandler = <
 				// set context params value if params schema is provided
 				if (body) context.bodyValidation = body.safeParse(req.body) as any
 
+				// check if there is validation failure
 				const validationFailed = [
 					context.paramsValidation.success,
 					context.queryValidation.success,
 					context.bodyValidation.success,
 				].some((v) => v === false)
 
+				// if validation is failed, go to 'before_response' step and prepare for failed response
 				if (validationFailed) {
 					currentStep = steps.S002.on.REQUEST_VALIDATION_FAILED
 					context.requestValidation.pass = false
-				} else {
+				}
+				// if validation is success, go to 'resolver' step
+				else {
 					currentStep = steps.S002.on.REQUEST_VALIDATION_PASSED
 					context.requestValidation.pass = true
 				}
@@ -602,16 +637,24 @@ export const createHandler = <
 			prevStep = steps.S003.name
 
 			// construct context object
-			const ctx: Context<Params, Query, Body> = {
-				...optContext,
+			const ctx: Ctx & Context<Params, Query, Body> = {
+				...(optContext as any),
 				params: context.requestValidation.response.params?.data,
 				query: context.requestValidation.response.query?.data,
 				body: context.requestValidation.response.body?.data,
 			}
 
-			// run the resolver function from `options`
-			context.resolverResult = await resolver({ ctx, req })
-			currentStep = steps.S003.on.RESOLVER_DONE
+			// execute resolver and move to next step
+			if (uncontrolledResolver === false) {
+				// run the resolver function from `options`
+				context.resolverResult = await resolver({ ctx, req } as any)
+				currentStep = steps.S003.on.RESOLVER_DONE
+			}
+
+			// execute resolver and exit the handler if resolver is set as uncontrolled
+			else {
+				return await resolver({ ctx, req, res } as any)
+			}
 		}
 
 		// 4. validate and safe parse response
@@ -697,8 +740,18 @@ export const createHandler = <
 			>
 			const firstEntry = result[firstEntryKey]
 
+			// reject running the resolver validation if there is no response schema provided
+			if (
+				uncontrolledResolver === false &&
+				response?.[firstEntryKey] === undefined
+			)
+				// TODO: use pretty logger instead of throwing the error.
+				throw new Error(
+					`The controlled resolver function needs at least one \`response\` schema.`,
+				)
+
 			// if response schema is provided, validate the result
-			context.resolverValidation = response[firstEntryKey]?.safeParse(
+			context.resolverValidation = response?.[firstEntryKey]?.safeParse(
 				firstEntry,
 			) as any
 
@@ -771,7 +824,7 @@ export const createHandler = <
 					error:
 						resolverValidation.success === true
 							? null
-							: resolverValidation.error,
+							: resolverValidation.error.format(),
 				}
 			}
 		}

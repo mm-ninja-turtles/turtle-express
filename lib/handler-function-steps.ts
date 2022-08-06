@@ -58,6 +58,7 @@ export const handlerFuncSteps = {
 		S003: {
 			name: 'resolver',
 			on: {
+				UNCONTROLLED_RESOLVER: '_break',
 				RESOLVER_DONE: 'resolver_validation',
 			},
 		},
