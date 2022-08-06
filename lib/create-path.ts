@@ -106,6 +106,7 @@ export interface PathReturnType {
 		R510 extends ZodType,
 		R511 extends ZodType,
 		// #endregion
+		UncontrolledResolver extends boolean = false,
 	>(
 		options: HandlerOptions<
 			Params,
@@ -180,8 +181,9 @@ export interface PathReturnType {
 			R507,
 			R508,
 			R510,
-			R511
+			R511,
 			// #endregion
+			UncontrolledResolver
 		>,
 	) => void
 	/**
@@ -225,7 +227,7 @@ export function createPath(
 		Params extends ZodType,
 		Query extends ZodType,
 		Body extends ZodType,
-		Ctx extends Context<Params, Query, Body>,
+		Ctx extends {},
 		// #region HandlerOptions Http Status Code Generics
 		// INFORMATION RESPONSES
 		R100 extends ZodType,
@@ -296,6 +298,7 @@ export function createPath(
 		R510 extends ZodType,
 		R511 extends ZodType,
 		// #endregion
+		UncontrolledResolver extends boolean,
 	>(
 		options: HandlerOptions<
 			Params,
@@ -370,8 +373,9 @@ export function createPath(
 			R507,
 			R508,
 			R510,
-			R511
+			R511,
 			// #endregion
+			UncontrolledResolver
 		>,
 	) => {
 		const handlerMeta = createHandler<
@@ -447,8 +451,9 @@ export function createPath(
 			R507,
 			R508,
 			R510,
-			R511
+			R511,
 			// #endregion
+			UncontrolledResolver
 		>(options)
 		// push to the handler tracker collection
 		handlerColl.push(handlerMeta)
