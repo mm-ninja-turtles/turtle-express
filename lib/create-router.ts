@@ -10,6 +10,10 @@ export interface SetupOptions {
 	paths: PathReturnType[]
 }
 
+export interface CreateRouterOptions {
+	basePath?: Path
+}
+
 export interface CreateRouterReturnType {
 	/** Express's `use` function. */
 	use: UseFunction
@@ -60,7 +64,9 @@ export interface CreateRouterReturnType {
 	setup: (expressApp: Express, options: SetupOptions) => void
 }
 
-export function createRouter(router: Router): CreateRouterReturnType {
+export function createRouter(router: Router, options?: CreateRouterOptions): CreateRouterReturnType {
+	const basePath = options?.basePath ?? '/'
+
 	const use: UseFunction = (...handlers) => router.use(...handlers)
 
 	const path = (path: Path, options?: PathOptions) =>
@@ -91,7 +97,7 @@ export function createRouter(router: Router): CreateRouterReturnType {
 			})
 		})
 
-		expressApp.use(router)
+		expressApp.use(basePath, router)
 	}
 
 	return { use, path, setup }
