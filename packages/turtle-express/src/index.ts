@@ -1,5 +1,9 @@
 import fetch, { Request, Response, Headers } from 'cross-fetch'
 
+declare global {
+	export type fetch = typeof fetch
+}
+
 function bindFetchApi() {
 	global.fetch = fetch as any
 	global.Request = Request as any
