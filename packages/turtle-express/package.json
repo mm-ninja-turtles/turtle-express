@@ -11,12 +11,12 @@
 	],
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/wai-lin/turtle-express.git"
+		"url": "git+https://github.com/mm-ninja-turtles/turtle-express.git"
 	},
 	"bugs": {
-		"url": "https://github.com/wai-lin/turtle-express/issues"
+		"url": "https://github.com/mm-ninja-turtles/turtle-express/issues"
 	},
-	"homepage": "https://github.com/wai-lin/turtle-express#readme",
+	"homepage": "https://github.com/mm-ninja-turtles/turtle-express#readme",
 	"keywords": [
 		"express",
 		"express-framework",
