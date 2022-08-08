@@ -20,7 +20,7 @@
 		"express": "^4.18.1",
 		"nodemon": "^2.0.19",
 		"ts-node": "^10.9.1",
-		"turtle-express": "workspace:^0.1.0",
+		"turtle-express": "workspace:^0.1.1",
 		"typescript": "^4.7.4",
 		"zod": "^3.17.9"
 	},
