@@ -1,4 +1,4 @@
-# Bulbasaur Express
+# Turtle Express
 
 `fastify` like api with `trpc` like type safety framework for `express.js`.
 First class support for `OpenApi` with `Swagger` like UI generation for public facing APIs.
