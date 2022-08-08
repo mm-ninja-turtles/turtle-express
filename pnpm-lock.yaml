@@ -40,7 +40,7 @@ importers:
       express: ^4.18.1
       nodemon: ^2.0.19
       ts-node: ^10.9.1
-      turtle-express: workspace:^0.0.0
+      turtle-express: workspace:*
       typescript: ^4.7.4
       zod: ^3.17.9
     dependencies:
@@ -3793,7 +3793,7 @@ packages:
     resolution: {directory: packages/turtle-express, type: directory}
     id: file:packages/turtle-express
     name: turtle-express
-    version: 0.0.0
+    version: 0.1.1
     peerDependencies:
       cross-fetch: '*'
       zod: '*'

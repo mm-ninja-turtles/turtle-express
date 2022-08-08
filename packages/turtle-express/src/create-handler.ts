@@ -805,22 +805,29 @@ export const createHandler = <
 
 				// status code to response back
 				let statusCode = parseInt(Object.keys(result)[0])
+				// status message to response back
+				let message = 'Success.'
+
 				// if schema validation failed and status code is not
 				// error codes which is less than 400 code,
 				// then set status code to 400 as it's a validation error
-				if (statusCode < 400 && resolverValidation.success === false)
+				if (statusCode < 400 && resolverValidation.success === false) {
 					statusCode = 400
+					message = 'Response validation failed.'
+				}
 				// change success status to false if result key status is
 				// greater than or equal to 400
-				else if (resolverValidation && statusCode >= 400)
+				else if (resolverValidation && statusCode >= 400) {
 					resolverValidation.success = false
+					message = 'Failed.'
+				}
 
 				// create response init object
 				context.responseInit = {
 					statusCode,
 					success: resolverValidation.success,
-					message: 'Success.',
-					data: resolverValidation.data,
+					message,
+					data: resolverValidation.data ?? null,
 					error:
 						resolverValidation.success === true
 							? null
