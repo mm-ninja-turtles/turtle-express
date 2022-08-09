@@ -1,19 +1,26 @@
 # turtle-express
 
+## 0.1.3
+
+### Patch Changes
+
+- Options of handler function now show descriptions when hover.
+- Fixed handler context not showing types correctly
+
 ## 0.1.2
 
 ### Patch Changes
 
-- resolver validation message
+- Resolver function validation failed now show `Validation failed.` message
 
 ## 0.1.1
 
 ### Patch Changes
 
-- repo, homepage, issues url
+- `package.json` file repo, homepage, issues url
 
 ## 0.1.0
 
 ### Minor Changes
 
-- alpha test release
+- `alpha` test release
