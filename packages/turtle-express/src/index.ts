@@ -13,6 +13,7 @@ function bindFetchApi() {
 bindFetchApi()
 
 export { createRouter } from './create-router'
+export { errorHandler } from './error-handler'
 
 export type { Method } from './types'
 export type { SetupOptions, CreateRouterReturnType } from './create-router'

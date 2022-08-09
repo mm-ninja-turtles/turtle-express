@@ -48,15 +48,12 @@ importers:
       express: 4.18.1
       nodemon: 2.0.19
       ts-node: 10.9.1_tdn3ypgnfy6bmey2q4hu5jonwi
-      turtle-express: file:packages/turtle-express_jihhjcqpjykrxn52gjxy6junya
+      turtle-express: link:../../packages/turtle-express
       typescript: 4.7.4
       zod: 3.17.9
     devDependencies:
       '@types/express': 4.17.13
       '@types/node': 18.0.6
-    dependenciesMeta:
-      turtle-express:
-        injected: true
 
   packages/turtle-express:
     specifiers:
@@ -3788,19 +3785,3 @@ packages:
 
   /zod/3.17.9:
     resolution: {integrity: sha512-QF1843pYoRk1jFP+/UiEySXaTSiIyFod3KyDzoO3qHKGZdX7z7RNXI4lEsiibvpnIZQwcDVU58ZrxP4pQ7BmTQ==}
-
-  file:packages/turtle-express_jihhjcqpjykrxn52gjxy6junya:
-    resolution: {directory: packages/turtle-express, type: directory}
-    id: file:packages/turtle-express
-    name: turtle-express
-    version: 0.1.1
-    peerDependencies:
-      cross-fetch: '*'
-      zod: '*'
-    dependencies:
-      cross-fetch: 3.1.5
-      express: 4.18.1
-      zod: 3.17.9
-    transitivePeerDependencies:
-      - supports-color
-    dev: false

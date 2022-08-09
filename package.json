@@ -2,6 +2,7 @@
 	"name": "@turtle-express/monorepo",
 	"description": "",
 	"version": "0.0.0",
+	"private": true,
 	"license": "MIT",
 	"repository": {
 		"type": "git",
@@ -21,6 +22,7 @@
 		"build": "pnpm --filter turtle-express run build",
 		"build:watch": "pnpm --filter turtle-express run build:watch",
 		"update:pkg": "ncu -i --format group",
+		"prepublishOnly": "pnpm -w run build",
 		"commit": "git add -A && cz"
 	},
 	"config": {
