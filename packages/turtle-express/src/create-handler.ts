@@ -28,7 +28,7 @@ export type ResolverArgs<
 	Params extends ZodType,
 	Query extends ZodType,
 	Body extends ZodType,
-	Ctx extends {},
+	Ctx,
 > = UncontrolledResolver extends true
 	? // also include express response object if user defined the resolver should be uncontrolled
 	  {
@@ -76,7 +76,7 @@ export interface HandlerOptions<
 	Params extends ZodType,
 	Query extends ZodType,
 	Body extends ZodType,
-	Ctx extends {},
+	Ctx,
 	// #region HandlerOptions Http Status Code Generics
 	// INFORMATION RESPONSES
 	R100 extends ZodType,
@@ -149,18 +149,46 @@ export interface HandlerOptions<
 	// #endregion
 	UncontrolledResolver extends boolean,
 > {
+	/**
+	 * Context object accepts any thing inside and
+	 * will expose it to the `guard` and `resolver` functions.
+	 */
 	context?: Ctx
 
+	/**
+	 * Http Methods eg.`GET`, `POST`, `PUT`, ...
+	 */
 	method: Method
 
+	/**
+	 * Request object accepts `params`, `query`, and `body`
+	 * as `zod` object schema.
+	 */
 	request?: {
+		/**
+		 * `zod` object schema for the url params.
+		 * url is always `string`, so you need to transform the
+		 * data after parsing it as string.
+		 */
 		params?: Params
 
+		/**
+		 * `zod` object schema for the url search query params.
+		 * url is always `string`, so you need to transform the
+		 * data after parsing it as string.
+		 */
 		query?: Query
 
+		/**
+		 * `zod` object schema for the request `body`.
+		 */
 		body?: Body
 	}
 
+	/**
+	 * Response object with HttpStatusCodes that accept `zod`
+	 * schema as schema template that the `resolver` function needs to return.
+	 */
 	response?: ResponseShape<
 		// #region Http Status Code Generics
 		// INFORMATION RESPONSES
@@ -234,6 +262,11 @@ export interface HandlerOptions<
 		// #endregion
 	>
 
+	/**
+	 * Guard function runs at the start of a request.
+	 * If the returned `pass` value is `false`, the handler
+	 * will response back with `401` unauthorized.
+	 */
 	guard?<R extends { pass: boolean; response: any }>(): R | Promise<R>
 	guard?<R extends { pass: boolean; response: any }>(ctx: Ctx): R | Promise<R>
 	guard?<R extends { pass: boolean; response: any }>(
@@ -241,8 +274,19 @@ export interface HandlerOptions<
 		req: Request,
 	): R | Promise<R>
 
+	/**
+	 * Defined whether the `resolver` function depends on
+	 * the `response` schema object or not. Default is `false`.
+	 * If set to `true`, resolver function can be controlled as
+	 * the user wanted. It also expose `express`'s response object
+	 * as `res` object.
+	 */
 	uncontrolledResolver?: UncontrolledResolver
 
+	/**
+	 * Resolver function is the place where you can defined your
+	 * application logics, business logics and database operations and etc...
+	 */
 	resolver(
 		args: ResolverArgs<UncontrolledResolver, Params, Query, Body, Ctx>,
 	): UncontrolledResolver extends true
@@ -400,7 +444,7 @@ export const createHandler = <
 	Params extends ZodType,
 	Query extends ZodType,
 	Body extends ZodType,
-	Ctx extends {},
+	Ctx,
 	// #region HandlerOptions Http Status Code Generics
 	// INFORMATION RESPONSES
 	R100 extends ZodType,
