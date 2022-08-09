@@ -567,283 +567,299 @@ export const createHandler = <
 	const body = request?.body
 
 	// handler function
-	const handler: RequestHandler = async (req, res) => {
-		const { context, steps } = handlerFuncSteps
-		let prevStep: string = steps.S001.name
-		let currentStep: string = steps.S001.name
+	const handler: RequestHandler = async (req, res, next) => {
+		// promise resolve will catch all async and sync errors and pass to catch block
+		Promise.resolve()
+			.then(async () => {
+				const { context, steps } = handlerFuncSteps
+				let prevStep: string = steps.S001.name
+				let currentStep: string = steps.S001.name
 
-		// 1. execute guard function if provided
-		if (currentStep === steps.S001.name) {
-			prevStep = steps.S001.name
+				// 1. execute guard function if provided
+				if (currentStep === steps.S001.name) {
+					prevStep = steps.S001.name
 
-			if (guard) {
-				context.guardResult = await guard(optContext as any, req)
-				currentStep = context.guardResult.pass
-					? steps.S001.on.GUARD_PASSED
-					: steps.S001.on.GUARD_FAILED
-			} else {
-				// skip to next state if guard function is not provided
-				currentStep = steps.S001.on.GUARD_SKIPPED
-			}
-		}
-
-		// 2. run request validations (params, query, input) and safe parse
-		if (currentStep === steps.S002.name) {
-			prevStep = steps.S002.name
-
-			// skip to next state if no request validations are provided
-			if ([params, query, body].every((v) => v === undefined)) {
-				currentStep = steps.S002.on.REQUEST_VALIDATION_SKIPPED
-			}
-
-			// run the request validations if one request schema exists
-			else {
-				// set context params value if params schema is provided
-				if (params)
-					context.paramsValidation = params.safeParse(req.params) as any
-				// set context query value if query schema is provided
-				if (query) context.queryValidation = query.safeParse(req.query) as any
-				// set context params value if params schema is provided
-				if (body) context.bodyValidation = body.safeParse(req.body) as any
-
-				// check if there is validation failure
-				const validationFailed = [
-					context.paramsValidation.success,
-					context.queryValidation.success,
-					context.bodyValidation.success,
-				].some((v) => v === false)
-
-				// if validation is failed, go to 'before_response' step and prepare for failed response
-				if (validationFailed) {
-					currentStep = steps.S002.on.REQUEST_VALIDATION_FAILED
-					context.requestValidation.pass = false
-				}
-				// if validation is success, go to 'resolver' step
-				else {
-					currentStep = steps.S002.on.REQUEST_VALIDATION_PASSED
-					context.requestValidation.pass = true
+					if (guard) {
+						context.guardResult = await guard(optContext as any, req)
+						currentStep = context.guardResult.pass
+							? steps.S001.on.GUARD_PASSED
+							: steps.S001.on.GUARD_FAILED
+					} else {
+						// skip to next state if guard function is not provided
+						currentStep = steps.S001.on.GUARD_SKIPPED
+					}
 				}
 
-				context.requestValidation.response = {
-					params: context.paramsValidation,
-					query: context.queryValidation,
-					body: context.bodyValidation,
-				}
-			}
-		}
+				// 2. run request validations (params, query, input) and safe parse
+				if (currentStep === steps.S002.name) {
+					prevStep = steps.S002.name
 
-		// 3. run resolver function
-		if (currentStep === steps.S003.name) {
-			prevStep = steps.S003.name
+					// skip to next state if no request validations are provided
+					if ([params, query, body].every((v) => v === undefined)) {
+						currentStep = steps.S002.on.REQUEST_VALIDATION_SKIPPED
+					}
 
-			// construct context object
-			const ctx: Ctx & Context<Params, Query, Body> = {
-				...(optContext as any),
-				params: context.requestValidation.response.params?.data,
-				query: context.requestValidation.response.query?.data,
-				body: context.requestValidation.response.body?.data,
-			}
+					// run the request validations if one request schema exists
+					else {
+						// set context params value if params schema is provided
+						if (params)
+							context.paramsValidation = params.safeParse(req.params) as any
+						// set context query value if query schema is provided
+						if (query)
+							context.queryValidation = query.safeParse(req.query) as any
+						// set context params value if params schema is provided
+						if (body) context.bodyValidation = body.safeParse(req.body) as any
 
-			// execute resolver and move to next step
-			if (uncontrolledResolver === false) {
-				// run the resolver function from `options`
-				context.resolverResult = await resolver({ ctx, req } as any)
-				currentStep = steps.S003.on.RESOLVER_DONE
-			}
+						// check if there is validation failure
+						const validationFailed = [
+							context.paramsValidation.success,
+							context.queryValidation.success,
+							context.bodyValidation.success,
+						].some((v) => v === false)
 
-			// execute resolver and exit the handler if resolver is set as uncontrolled
-			else {
-				return await resolver({ ctx, req, res } as any)
-			}
-		}
+						// if validation is failed, go to 'before_response' step and prepare for failed response
+						if (validationFailed) {
+							currentStep = steps.S002.on.REQUEST_VALIDATION_FAILED
+							context.requestValidation.pass = false
+						}
+						// if validation is success, go to 'resolver' step
+						else {
+							currentStep = steps.S002.on.REQUEST_VALIDATION_PASSED
+							context.requestValidation.pass = true
+						}
 
-		// 4. validate and safe parse response
-		if (currentStep === steps.S004.name) {
-			prevStep = steps.S004.name
-
-			const result = context.resolverResult
-
-			// get the first entry as a result
-			const firstEntryKey = parseInt(
-				Object.keys(result)[0],
-			) as keyof ResponseShape<
-				// #region Http Status Code Generics
-				// INFORMATION RESPONSES
-				R100,
-				R101,
-				R102,
-				R103,
-				// SUCCESSFUL RESPONSES
-				R200,
-				R201,
-				R202,
-				R203,
-				R204,
-				R205,
-				R206,
-				R207,
-				R208,
-				R226,
-				// REDIRECTION MESSAGES
-				R300,
-				R301,
-				R302,
-				R303,
-				R304,
-				R305,
-				R306,
-				R307,
-				R308,
-				// CLIENT ERROR RESPONSES
-				R400,
-				R401,
-				R402,
-				R403,
-				R404,
-				R405,
-				R406,
-				R407,
-				R408,
-				R409,
-				R410,
-				R411,
-				R412,
-				R413,
-				R414,
-				R415,
-				R416,
-				R417,
-				R418,
-				R421,
-				R422,
-				R423,
-				R424,
-				R425,
-				R426,
-				R428,
-				R429,
-				R431,
-				R451,
-				// SERVER ERROR RESPONSES
-				R500,
-				R501,
-				R502,
-				R503,
-				R504,
-				R505,
-				R506,
-				R507,
-				R508,
-				R510,
-				R511
-				// #endregion
-			>
-			const firstEntry = result[firstEntryKey]
-
-			// reject running the resolver validation if there is no response schema provided
-			if (
-				uncontrolledResolver === false &&
-				response?.[firstEntryKey] === undefined
-			)
-				// TODO: use pretty logger instead of throwing the error.
-				throw new Error(
-					`The controlled resolver function needs at least one \`response\` schema.`,
-				)
-
-			// if response schema is provided, validate the result
-			context.resolverValidation = response?.[firstEntryKey]?.safeParse(
-				firstEntry,
-			) as any
-
-			currentStep = steps.S004.on.RESOLVER_VALIDATION_DONE
-		}
-
-		// 5. send response
-		if (currentStep === steps.S005.name) {
-			// 5.1: if previous step is 'guard', the guard must have failed
-			if (prevStep === steps.S001.name && context.guardResult.pass === false) {
-				// create guard failed response
-				context.responseInit = {
-					statusCode: 401,
-					success: false,
-					message: 'Unauthorized.',
-					data: null,
-					error: context.guardResult.response,
-				}
-			}
-
-			// 5.2: if previous step is 'request validation', the request validation must have failed
-			else if (prevStep === steps.S002.name) {
-				const {
-					params: reqValParams,
-					query: reqValQuery,
-					body: reqValBody,
-				} = context.requestValidation.response
-
-				const error = {
-					params:
-						reqValParams?.success === true ? null : reqValParams.error.format(),
-					query:
-						reqValQuery?.success === true ? null : reqValQuery.error.format(),
-					body: reqValBody?.success === true ? null : reqValBody.error.format(),
+						context.requestValidation.response = {
+							params: context.paramsValidation,
+							query: context.queryValidation,
+							body: context.bodyValidation,
+						}
+					}
 				}
 
-				// create request validation failed response
-				context.responseInit = {
-					statusCode: 400,
-					success: false,
-					message: 'Validation Failed.',
-					data: null,
-					error,
-				}
-			}
+				// 3. run resolver function
+				if (currentStep === steps.S003.name) {
+					prevStep = steps.S003.name
 
-			// 5.3: if previous step is 'resolver_validation', should response with the resolver validation
-			else {
-				const result = context.resolverResult
-				const resolverValidation = context.resolverValidation
+					// construct context object
+					const ctx: Ctx & Context<Params, Query, Body> = {
+						...(optContext as any),
+						params: context.requestValidation.response.params?.data,
+						query: context.requestValidation.response.query?.data,
+						body: context.requestValidation.response.body?.data,
+					}
 
-				// status code to response back
-				let statusCode = parseInt(Object.keys(result)[0])
-				// status message to response back
-				let message = 'Success.'
+					// execute resolver and move to next step
+					if (uncontrolledResolver === false) {
+						// run the resolver function from `options`
+						context.resolverResult = await resolver({ ctx, req } as any)
+						currentStep = steps.S003.on.RESOLVER_DONE
+					}
 
-				// if schema validation failed and status code is not
-				// error codes which is less than 400 code,
-				// then set status code to 400 as it's a validation error
-				if (statusCode < 400 && resolverValidation.success === false) {
-					statusCode = 400
-					message = 'Response validation failed.'
-				}
-				// change success status to false if result key status is
-				// greater than or equal to 400
-				else if (resolverValidation && statusCode >= 400) {
-					resolverValidation.success = false
-					message = 'Failed.'
+					// execute resolver and exit the handler if resolver is set as uncontrolled
+					else {
+						return await resolver({ ctx, req, res } as any)
+					}
 				}
 
-				// create response init object
-				context.responseInit = {
-					statusCode,
-					success: resolverValidation.success,
-					message,
-					data: resolverValidation.data ?? null,
-					error:
-						resolverValidation.success === true
-							? null
-							: resolverValidation.error.format(),
-				}
-			}
-		}
+				// 4. validate and safe parse response
+				if (currentStep === steps.S004.name) {
+					prevStep = steps.S004.name
 
-		// response with the safe parsed result
-		res.status(context.responseInit.statusCode)
-		return res.send({
-			success: context.responseInit.success,
-			message: context.responseInit.message,
-			data: context.responseInit.data,
-			error: context.responseInit.error,
-		})
+					const result = context.resolverResult
+
+					// get the first entry as a result
+					const firstEntryKey = parseInt(
+						Object.keys(result)[0],
+					) as keyof ResponseShape<
+						// #region Http Status Code Generics
+						// INFORMATION RESPONSES
+						R100,
+						R101,
+						R102,
+						R103,
+						// SUCCESSFUL RESPONSES
+						R200,
+						R201,
+						R202,
+						R203,
+						R204,
+						R205,
+						R206,
+						R207,
+						R208,
+						R226,
+						// REDIRECTION MESSAGES
+						R300,
+						R301,
+						R302,
+						R303,
+						R304,
+						R305,
+						R306,
+						R307,
+						R308,
+						// CLIENT ERROR RESPONSES
+						R400,
+						R401,
+						R402,
+						R403,
+						R404,
+						R405,
+						R406,
+						R407,
+						R408,
+						R409,
+						R410,
+						R411,
+						R412,
+						R413,
+						R414,
+						R415,
+						R416,
+						R417,
+						R418,
+						R421,
+						R422,
+						R423,
+						R424,
+						R425,
+						R426,
+						R428,
+						R429,
+						R431,
+						R451,
+						// SERVER ERROR RESPONSES
+						R500,
+						R501,
+						R502,
+						R503,
+						R504,
+						R505,
+						R506,
+						R507,
+						R508,
+						R510,
+						R511
+						// #endregion
+					>
+					const firstEntry = result[firstEntryKey]
+
+					// reject running the resolver validation if there is no response schema provided
+					if (
+						uncontrolledResolver === false &&
+						response?.[firstEntryKey] === undefined
+					)
+						throw new Error(
+							`The controlled resolver function needs at least one \`response\` schema.`,
+						)
+
+					// if response schema is provided, validate the result
+					context.resolverValidation = response?.[firstEntryKey]?.safeParse(
+						firstEntry,
+					) as any
+
+					currentStep = steps.S004.on.RESOLVER_VALIDATION_DONE
+				}
+
+				// 5. send response
+				if (currentStep === steps.S005.name) {
+					// 5.1: if previous step is 'guard', the guard must have failed
+					if (
+						prevStep === steps.S001.name &&
+						context.guardResult.pass === false
+					) {
+						// create guard failed response
+						context.responseInit = {
+							statusCode: 401,
+							success: false,
+							message: 'Unauthorized.',
+							data: null,
+							error: context.guardResult.response,
+						}
+					}
+
+					// 5.2: if previous step is 'request validation', the request validation must have failed
+					else if (prevStep === steps.S002.name) {
+						const {
+							params: reqValParams,
+							query: reqValQuery,
+							body: reqValBody,
+						} = context.requestValidation.response
+
+						const error = {
+							params:
+								reqValParams?.success === true
+									? null
+									: reqValParams.error.format(),
+							query:
+								reqValQuery?.success === true
+									? null
+									: reqValQuery.error.format(),
+							body:
+								reqValBody?.success === true ? null : reqValBody.error.format(),
+						}
+
+						// create request validation failed response
+						context.responseInit = {
+							statusCode: 400,
+							success: false,
+							message: 'Validation Failed.',
+							data: null,
+							error,
+						}
+					}
+
+					// 5.3: if previous step is 'resolver_validation', should response with the resolver validation
+					else {
+						const result = context.resolverResult
+						const resolverValidation = context.resolverValidation
+
+						// status code to response back
+						let statusCode = parseInt(Object.keys(result)[0])
+						// status message to response back
+						let message = 'Success.'
+
+						// if schema validation failed and status code is not
+						// error codes which is less than 400 code,
+						// then set status code to 400 as it's a validation error
+						if (statusCode < 400 && resolverValidation.success === false) {
+							statusCode = 400
+							message = 'Response validation failed.'
+						}
+						// change success status to false if result key status is
+						// greater than or equal to 400
+						else if (resolverValidation && statusCode >= 400) {
+							resolverValidation.success = false
+							message = 'Failed.'
+						}
+
+						// create response init object
+						context.responseInit = {
+							statusCode,
+							success: resolverValidation.success,
+							message,
+							data: resolverValidation.data ?? null,
+							error:
+								resolverValidation.success === true
+									? null
+									: resolverValidation.error.format(),
+						}
+					}
+				}
+
+				// response with the safe parsed result
+				res.status(context.responseInit.statusCode)
+				return res.send({
+					success: context.responseInit.success,
+					message: context.responseInit.message,
+					data: context.responseInit.data,
+					error: context.responseInit.error,
+				})
+			})
+			// catch next will pass the error to the express level
+			// and we can finally define global error handler on the upper most level
+			// of the app init
+			.catch(next)
 	}
 
 	return { method, handler }
