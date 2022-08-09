@@ -1,6 +1,6 @@
 import type { Router } from 'express'
 import type { ZodType } from 'zod'
-import type { Context, HandlerMeta, HandlerOptions } from './create-handler'
+import type { HandlerMeta, HandlerOptions } from './create-handler'
 
 import { createHandler } from './create-handler'
 
@@ -35,7 +35,7 @@ export interface PathReturnType {
 		Params extends ZodType,
 		Query extends ZodType,
 		Body extends ZodType,
-		Ctx extends Context<Params, Query, Body>,
+		Ctx,
 		// #region HandlerOptions Http Status Code Generics
 		// INFORMATION RESPONSES
 		R100 extends ZodType,
