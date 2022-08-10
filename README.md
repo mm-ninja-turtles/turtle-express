@@ -1,18 +1,22 @@
 # Turtle Express
 
-`fastify` like api with `trpc` like type safety framework for `express.js`.
+`turtle-express` is kinda a framework or a library based on `express.js` with an opinionated express router with type safety and schema validation with zod. Also many [more features](https://github.com/mm-ninja-turtles/turtle-express/discussions/7) planning to be included.
+
+[wiki](https://github.com/mm-ninja-turtles/turtle-express/wiki/01.-Getting-Started)
+
+It would be nice to develop with `fastify` like api with `trpc` like type safety for `express.js`.
 First class support for `OpenApi` with `Swagger` like UI generation for public facing APIs.
-Also support for `api-client-sdk` generation for front-end.
+Also support for `api-client-sdk` generation for front-end. And our first final goal is to achieve these features.
 
-## Prerequisites
+## Prerequisites for Contribution
 
-- [pnpm](https://pnpm.js.org/) *
+- [pnpm](https://pnpm.js.org/) \*
 - knowledge of
-  - [typescript](https://www.typescriptlang.org/) *
-  - [express.js](https://expressjs.com/) *
-  - [fastify](https://www.fastify.io/) *
-  - [openapi-generator](https://openapi-generator.tech/) *
-  - [swagger-ui](https://swagger.io/) *
+  - [typescript](https://www.typescriptlang.org/) \*
+  - [express.js](https://expressjs.com/) \*
+  - [fastify](https://www.fastify.io/) \*
+  - [openapi-generator](https://openapi-generator.tech/) \*
+  - [swagger-ui](https://swagger.io/) \*
 
 ## How to run the project with examples.
 
