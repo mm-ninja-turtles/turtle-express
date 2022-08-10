@@ -1,5 +1,13 @@
 # turtle-express
 
+## 0.1.4
+
+### Patch Changes
+
+- New `pagination` helper function
+- `paginationSchema` for easy `zod` schema reference for the `request`, `response` schemas
+- package.json repo url updated
+
 ## 0.1.3
 
 ### Patch Changes

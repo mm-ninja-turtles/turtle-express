@@ -13,9 +13,13 @@ function bindFetchApi() {
 bindFetchApi()
 
 export { createRouter } from './create-router'
-export { errorHandler } from './error-handler'
+export { errorHandler, getPagination, paginationSchema } from './helpers/_index'
 
 export type { Method } from './types'
 export type { SetupOptions, CreateRouterReturnType } from './create-router'
 export type { Path, PathOptions, PathReturnType } from './create-path'
 export type { HandlerOptions } from './create-handler'
+export type {
+	GetPaginationArgs,
+	GetPaginationReturnType,
+} from './helpers/_index'
