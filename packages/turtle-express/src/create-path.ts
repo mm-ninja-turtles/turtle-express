@@ -227,7 +227,7 @@ export function createPath(
 		Params extends ZodType,
 		Query extends ZodType,
 		Body extends ZodType,
-		Ctx extends {},
+		Ctx,
 		// #region HandlerOptions Http Status Code Generics
 		// INFORMATION RESPONSES
 		R100 extends ZodType,
