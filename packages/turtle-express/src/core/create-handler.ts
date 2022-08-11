@@ -1,6 +1,6 @@
 import type { RequestHandler, Request, Response } from 'express'
 import type { z, ZodType } from 'zod'
-import type { Method, ResponseShape } from './types'
+import type { Method, ResponseShape } from '../types'
 
 import { handlerFuncSteps } from './handler-function-steps'
 
