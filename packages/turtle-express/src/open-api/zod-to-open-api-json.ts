@@ -5,11 +5,16 @@ import { z } from 'zod'
 import { chain } from 'lodash-es'
 
 /**
- * Function to convert each ZodType schema to OpenAPI JSON schema.
+ * Function to convert each ZodType schema to OpenAPI Request, Parameter, Response schemas.
  */
 export function zodToOpenApiJson<
 	Schema extends ExtendsZodWithOpenApiReturnType<ZodType>,
->(schema: Schema): any {
+>(
+	schema: Schema,
+):
+	| OpenAPIV3_1.ResponseObject
+	| OpenAPIV3_1.ParameterObject[]
+	| OpenAPIV3_1.RequestBodyObject {
 	const { type } = schema._openApi
 
 	const openApiJsonElement = createOpenApiJsonElement(schema)
@@ -68,17 +73,22 @@ export function zodToOpenApiJson<
  */
 export function createOpenApiJsonElement<
 	Schema extends ExtendsZodWithOpenApiReturnType<z.ZodTypeAny>,
->(schema: Schema): OpenAPIV3_1.SchemaObject {
+>(schema: Schema): any {
 	const schemaDef = schema._def
 
-	function createOpenApi(extendSchema: any): OpenAPIV3_1.SchemaObject {
+	function createOpenApi(extendSchema: any) {
 		const title = schema?._openApi?.title ?? ''
 		const type = schema?._openApi?.type ?? ''
+		const transformedTitle = chain(`${title} ${type}`)
+			.camelCase()
+			.upperFirst()
+			.value()
 
 		return {
 			required: true,
 			...extendSchema,
-			title: chain(`${title} ${type}`).camelCase().upperFirst().value() ?? '',
+			operationId: transformedTitle ?? '',
+			title: transformedTitle ?? '',
 			description: schemaDef?.description ?? '',
 		}
 	}

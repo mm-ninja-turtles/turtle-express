@@ -73,7 +73,12 @@ describe('[zodToOpenApiJson function]', () => {
 			type: 'RequestQuery',
 			title: 'Api Token',
 			schema: z.object({
-				token: z.string().describe('Api Token.'),
+				limit: z
+					.string()
+					.default('10')
+					.transform((v) => parseInt(v)),
+				order: z.enum(['asc', 'desc']).default('asc'),
+				// token: z.string().describe('Api Token.'),
 			}),
 		})
 		const query = zodToOpenApiJson(requestQuerySchema)
@@ -96,11 +101,8 @@ describe('[zodToOpenApiJson function]', () => {
 		})
 		const response = zodToOpenApiJson(responseSchema)
 
-		console.log({
-			param,
-			query,
-			body,
-			response,
-		})
+		// console.log(params)
+		// console.log(query)
+		console.log(body.content['application/json'].schema)
 	})
 })
