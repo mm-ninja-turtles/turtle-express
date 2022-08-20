@@ -878,7 +878,7 @@ export const createHandler = <
 						}
 						const resolverValidationError =
 							resolverValidation.error !== undefined
-								? resolverValidation.error
+								? resolverValidation.error.format()
 								: null
 						// create response init object
 						context.responseInit = {
