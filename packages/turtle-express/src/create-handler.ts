@@ -883,10 +883,10 @@ export const createHandler = <
 							success: resolverValidation.success,
 							message,
 							data: resolverValidation.data ?? null,
-							error:
-								resolverValidation.success === true
+							error: null,
+							/* resolverValidation.success === true
 									? null
-									: resolverValidation.error.format(),
+									: resolverValidation.error.format(), */
 						}
 					}
 				}
