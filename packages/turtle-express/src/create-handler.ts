@@ -876,17 +876,20 @@ export const createHandler = <
 							resolverValidation.success = false
 							message = 'Failed.'
 						}
-
+						const resolverValidationError =
+							resolverValidation.error !== undefined
+								? resolverValidation.error
+								: null
 						// create response init object
 						context.responseInit = {
 							statusCode,
 							success: resolverValidation.success,
 							message,
 							data: resolverValidation.data ?? null,
-							error: null,
-							/* resolverValidation.success === true
+							error:
+								resolverValidation.success === true
 									? null
-									: resolverValidation.error.format(), */
+									: resolverValidationError,
 						}
 					}
 				}
