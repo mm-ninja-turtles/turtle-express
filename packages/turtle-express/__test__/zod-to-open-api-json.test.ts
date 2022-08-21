@@ -1,7 +1,7 @@
 import { describe, it } from 'vitest'
 import zod from 'zod'
-import { extendsZodWithOpenApi } from '../zod-extends-openapi'
-import { zodToOpenApiJson } from '../zod-to-open-api-json'
+import { extendsZodWithOpenApi } from '../src/open-api/zod-extends-openapi'
+import { zodToOpenApiJson } from '../src/open-api/zod-to-open-api-json'
 
 const z = extendsZodWithOpenApi(zod)
 
@@ -103,6 +103,6 @@ describe('[zodToOpenApiJson function]', () => {
 
 		// console.log(params)
 		// console.log(query)
-		console.log(body.content['application/json'].schema)
+		console.log((body as any).content['application/json'].schema)
 	})
 })

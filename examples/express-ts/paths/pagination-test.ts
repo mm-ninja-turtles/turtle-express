@@ -22,7 +22,9 @@ paginationTest.handler({
 		200: paginationSchema,
 	},
 	resolver({ ctx }) {
-		const { limit, page } = ctx.query
+		const limit = ctx.query?.limit ?? 10
+		const page = ctx.query?.page ?? 1
+
 		return {
 			200: getPagination({ limit, page, totalCount: 341 }),
 		}

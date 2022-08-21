@@ -14,7 +14,7 @@ helloName.handler({
 		200: z.string(),
 	},
 	resolver({ ctx }) {
-		const { name } = ctx.params
+		const name = ctx.params?.name
 
 		return {
 			200: `Hello ${name}!`,
