@@ -1,0 +1,193 @@
+{
+	"openapi": "3.0.0",
+	"info": {
+		"version": "1.0.0",
+		"title": "Swagger Petstore",
+		"license": {
+			"name": "MIT"
+		}
+	},
+	"servers": [
+		{
+			"url": "http://petstore.swagger.io/v1"
+		}
+	],
+	"paths": {
+		"/pets": {
+			"get": {
+				"summary": "List all pets",
+				"operationId": "listPets",
+				"tags": ["pets"],
+				"parameters": [
+					{
+						"name": "limit",
+						"in": "query",
+						"description": "How many items to return at one time (max 100)",
+						"required": false,
+						"schema": {
+							"type": "integer",
+							"format": "int32"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "A paged array of pets",
+						"headers": {},
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Pet.v1"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "unexpected error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error.v1"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"summary": "Create a pet",
+				"operationId": "createPets",
+				"tags": ["pets"],
+				"responses": {
+					"201": {
+						"description": "Null response"
+					},
+					"default": {
+						"description": "unexpected error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error.v1"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/pets/{petId}": {
+			"get": {
+				"summary": "Info for a specific pet",
+				"operationId": "showPetById",
+				"tags": ["pets"],
+				"parameters": [
+					{
+						"name": "petId",
+						"in": "path",
+						"required": true,
+						"description": "The id of the pet to retrieve",
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Expected response to a valid request",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Pet.v1"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "unexpected error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error.v1"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"schemas": {
+			"Pets": {
+				"type": "array",
+				"items": {
+					"$ref": "#/components/schemas/Pet.v1"
+				},
+				"title": "Pets",
+				"description": "A list of pets."
+			},
+			"Error.v1": {
+				"title": "Error",
+				"type": "object",
+				"description": "A standard error object.",
+				"properties": {
+					"code": {
+						"type": "string"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": ["code"]
+			},
+			"Category.v1": {
+				"title": "Category",
+				"type": "object",
+				"description": "",
+				"properties": {
+					"name": {
+						"type": "string"
+					}
+				},
+				"required": ["name"]
+			},
+			"Pet.v1": {
+				"title": "Pet",
+				"description": "A single pet.",
+				"type": "object",
+				"xml": {
+					"name": "Pet"
+				},
+				"properties": {
+					"id": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"category": {
+						"$ref": "#/components/schemas/Category.v1"
+					},
+					"name": {
+						"type": "string",
+						"example": "doggie"
+					},
+					"photoUrls": {
+						"type": "array",
+						"xml": {
+							"name": "photoUrl",
+							"wrapped": true
+						},
+						"items": {
+							"type": "string"
+						}
+					},
+					"status": {
+						"type": "string",
+						"description": "pet status in the store",
+						"enum": ["available", "pending", "sold"]
+					}
+				},
+				"required": ["name", "photoUrls"]
+			}
+		}
+	}
+}

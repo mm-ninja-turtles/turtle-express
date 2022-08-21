@@ -1,0 +1,1532 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/v1/branches/core-banking": {
+      "get": {
+        "operationId": "BranchController_getCoreBankingBranchList",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "branches"
+        ]
+      }
+    },
+    "/v1/branches": {
+      "get": {
+        "operationId": "BranchController_findAll",
+        "summary": "",
+        "description": "Find branches with query and pagination.",
+        "parameters": [
+          {
+            "name": "limit",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "offset",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "operator",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "order",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "state",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "township",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "br_code",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "br_name",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "gp_id",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "gp_name",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "min_amt",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "branches"
+        ]
+      }
+    },
+    "/v1/branches/{id}": {
+      "get": {
+        "operationId": "BranchController_findOne",
+        "summary": "",
+        "description": "Find branch by id.",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "branches"
+        ]
+      },
+      "patch": {
+        "operationId": "BranchController_update",
+        "summary": "",
+        "description": "Update branch by id.",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateBranchDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "branches"
+        ]
+      }
+    },
+    "/v1/hubs-currency": {
+      "get": {
+        "operationId": "HubCurrencyController_findAll",
+        "summary": "",
+        "description": "Find hubs-currency with query and pagination.",
+        "parameters": [
+          {
+            "name": "limit",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "offset",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "operator",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "order",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "loginId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "groupName",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "type",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "HUB",
+                "CURRENCYCENTER"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "hubs"
+        ]
+      },
+      "post": {
+        "operationId": "HubCurrencyController_create",
+        "summary": "",
+        "description": "Create new hubs-currency.",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateHubCurrencyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "hubs"
+        ]
+      }
+    },
+    "/v1/hubs-currency/{id}": {
+      "get": {
+        "operationId": "HubCurrencyController_findOne",
+        "summary": "",
+        "description": "Find hubs-currency by id.",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "hubs"
+        ]
+      },
+      "patch": {
+        "operationId": "HubCurrencyController_update",
+        "summary": "",
+        "description": "Update hubs-currency by id.",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateHubCurrencyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "hubs"
+        ]
+      },
+      "delete": {
+        "operationId": "HubCurrencyController_delete",
+        "summary": "",
+        "description": "Delete hubs-currency by id.",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "hubs"
+        ]
+      }
+    },
+    "/v1/transactions": {
+      "get": {
+        "operationId": "TransactionController_findAll",
+        "summary": "",
+        "description": "Find transactions with query and pagination.",
+        "parameters": [
+          {
+            "name": "limit",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "offset",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "order",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "tr_id",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "br_id",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "br_name",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "to_br_name",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "REQUESTED",
+                "APPROVED",
+                "MODIFIED AND APPROVED",
+                "IGNORED",
+                "REJECTED",
+                "APPROVED CANCEL"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "app_by",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "hub_center",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cmo_req",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cmo_app_time",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tr_type_id",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "HARVEST",
+                "REPLENISHMENT"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "req_date",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "req_by",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "message",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListAllTransactionsResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "transactions"
+        ]
+      },
+      "post": {
+        "operationId": "TransactionController_create",
+        "summary": "",
+        "description": "Create new transaction.",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTransactionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "transactions"
+        ]
+      }
+    },
+    "/v1/transactions/inbox": {
+      "get": {
+        "operationId": "TransactionController_getAllInbox",
+        "summary": "",
+        "description": "Find transactions for inbox",
+        "parameters": [
+          {
+            "name": "limit",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "offset",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "REQUESTED",
+                "APPROVED",
+                "MODIFIED AND APPROVED",
+                "IGNORED",
+                "REJECTED",
+                "APPROVED CANCEL"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "req_date",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListAllInboxResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "transactions"
+        ]
+      }
+    },
+    "/v1/transactions/{id}": {
+      "get": {
+        "operationId": "TransactionController_findOne",
+        "summary": "",
+        "description": "Find transaction by id.",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "transactions"
+        ]
+      },
+      "patch": {
+        "operationId": "TransactionController_update",
+        "summary": "",
+        "description": "Update transaction by id.",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTransactionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "transactions"
+        ]
+      }
+    },
+    "/v1/bi-view/daily-balances": {
+      "get": {
+        "operationId": "BiViewController_getDailyBalances",
+        "summary": "",
+        "description": "Get daily opening and closing balances.",
+        "parameters": [
+          {
+            "name": "limit",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "offset",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "operator",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "order",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "date",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ce_code",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ce_type",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "bal_open",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "deposits",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "withdraws",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "cit_in",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "cit_out",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "bal_close",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "bi-view"
+        ]
+      }
+    },
+    "/v1/bi-view/daily-balances/{code}": {
+      "get": {
+        "operationId": "BiViewController_getDailyBalanceByCode",
+        "summary": "",
+        "description": "Get daily opening and closing balance of a branch.",
+        "parameters": [
+          {
+            "name": ":code",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "bi-view"
+        ]
+      }
+    },
+    "/v1/bi-view/live-cash": {
+      "get": {
+        "operationId": "BiViewController_getLiveCashes",
+        "summary": "",
+        "description": "Get live cash of branches.",
+        "parameters": [
+          {
+            "name": "limit",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "offset",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "operator",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "order",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "ce_code",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ce_type",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "currency",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "lcy_amount",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "amount",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "date",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListAllLiveCashResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "bi-view"
+        ]
+      }
+    },
+    "/v1/auth/ad/login": {
+      "post": {
+        "operationId": "AdLoginController_login",
+        "summary": "",
+        "description": "Login with AD credential.",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdLoginDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdLoginResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "auth/ad"
+        ]
+      }
+    },
+    "/dev/log-viewer": {
+      "get": {
+        "operationId": "LogViewerController_listAllLogFiles",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "dev/log-viewer"
+        ]
+      }
+    },
+    "/dev/log-viewer/{fileName}": {
+      "get": {
+        "operationId": "LogViewerController_getLogFileContent",
+        "parameters": [
+          {
+            "name": "fileName",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "dev/log-viewer"
+        ]
+      }
+    },
+    "/v1/dev/api-schema": {
+      "get": {
+        "operationId": "ApiSchemaController_find",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "dev/api-schema"
+        ]
+      }
+    },
+    "/v1/dev/api-schema/download": {
+      "get": {
+        "operationId": "ApiSchemaController_download",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "dev/api-schema"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "API Documentation",
+    "description": "CMS project API description.",
+    "version": "1.0.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "bearer": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http"
+      }
+    },
+    "schemas": {
+      "UpdateBranchDto": {
+        "type": "object",
+        "properties": {
+          "minimumAmount": {
+            "type": "number"
+          },
+          "groupId": {
+            "type": "string"
+          },
+          "groupName": {
+            "type": "string"
+          },
+          "groupType": {
+            "type": "string",
+            "enum": [
+              "HUB",
+              "CURRENCYCENTER"
+            ]
+          }
+        }
+      },
+      "CreateHubCurrencyDto": {
+        "type": "object",
+        "properties": {
+          "loginId": {
+            "type": "string"
+          },
+          "groupName": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "HUB",
+              "CURRENCYCENTER"
+            ]
+          }
+        },
+        "required": [
+          "loginId",
+          "groupName",
+          "type"
+        ]
+      },
+      "UpdateHubCurrencyDto": {
+        "type": "object",
+        "properties": {
+          "loginId": {
+            "type": "string"
+          },
+          "groupName": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "HUB",
+              "CURRENCYCENTER"
+            ]
+          }
+        }
+      },
+      "Transaction": {
+        "type": "object",
+        "properties": {
+          "TRANS_ID": {
+            "type": "string"
+          },
+          "BR_ID": {
+            "type": "string"
+          },
+          "BR_NAME": {
+            "type": "string"
+          },
+          "TO_BR_ID": {
+            "type": "string"
+          },
+          "TO_BR_NAME": {
+            "type": "string"
+          },
+          "OPEN_BAL": {
+            "type": "number"
+          },
+          "MIN_BAL": {
+            "type": "number"
+          },
+          "SYS_REC_AMT": {
+            "type": "number"
+          },
+          "APP_AMOUNT": {
+            "type": "number"
+          },
+          "STATUS": {
+            "type": "string",
+            "enum": [
+              "REQUESTED",
+              "APPROVED",
+              "MODIFIED AND APPROVED",
+              "IGNORED",
+              "REJECTED",
+              "APPROVED CANCEL"
+            ]
+          },
+          "APPROVED_BY": {
+            "type": "string"
+          },
+          "HUB_CENTER": {
+            "type": "string"
+          },
+          "CMO_REQUESTED": {
+            "type": "string"
+          },
+          "CMO_APPROVED_TIME": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "TR_TYPE_ID": {
+            "type": "string",
+            "enum": [
+              "HARVEST",
+              "REPLENISHMENT"
+            ]
+          },
+          "REQ_DATE": {
+            "type": "string"
+          },
+          "REQ_BY": {
+            "type": "string"
+          },
+          "REQ_AMT": {
+            "type": "number"
+          },
+          "MESSAGE": {
+            "type": "string"
+          },
+          "CREATED_AT": {
+            "type": "number"
+          },
+          "UPDATED_AT": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "TRANS_ID",
+          "BR_ID",
+          "BR_NAME",
+          "TO_BR_ID",
+          "TO_BR_NAME",
+          "OPEN_BAL",
+          "MIN_BAL",
+          "SYS_REC_AMT",
+          "APP_AMOUNT",
+          "STATUS",
+          "APPROVED_BY",
+          "HUB_CENTER",
+          "CMO_REQUESTED",
+          "CMO_APPROVED_TIME",
+          "TR_TYPE_ID",
+          "REQ_DATE",
+          "REQ_BY",
+          "REQ_AMT",
+          "MESSAGE",
+          "CREATED_AT",
+          "UPDATED_AT"
+        ]
+      },
+      "ListAllTransactionsResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Transaction"
+            }
+          },
+          "count": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "data",
+          "count"
+        ]
+      },
+      "ListAllInboxResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Transaction"
+            }
+          },
+          "count": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "data",
+          "count"
+        ]
+      },
+      "CreateTransactionDto": {
+        "type": "object",
+        "properties": {
+          "branchId": {
+            "type": "string",
+            "description": "ID of branch table."
+          },
+          "toBranchId": {
+            "type": "string",
+            "description": "ID of branch table."
+          },
+          "amount": {
+            "type": "number"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "REQUESTED",
+              "APPROVED",
+              "MODIFIED AND APPROVED",
+              "IGNORED",
+              "REJECTED",
+              "APPROVED CANCEL"
+            ]
+          },
+          "transactionTypeId": {
+            "type": "string",
+            "enum": [
+              "HARVEST",
+              "REPLENISHMENT"
+            ]
+          },
+          "requestedDate": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "branchId",
+          "amount",
+          "transactionTypeId",
+          "requestedDate"
+        ]
+      },
+      "UpdateTransactionDto": {
+        "type": "object",
+        "properties": {
+          "approvedAmount": {
+            "type": "number"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "REQUESTED",
+              "APPROVED",
+              "MODIFIED AND APPROVED",
+              "IGNORED",
+              "REJECTED",
+              "APPROVED CANCEL"
+            ]
+          },
+          "approvedBy": {
+            "type": "string",
+            "description": "AD ID of approved CMO."
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "LiveCash": {
+        "type": "object",
+        "properties": {
+          "CE_CODE": {
+            "type": "string"
+          },
+          "CE_TYPE": {
+            "type": "string"
+          },
+          "CURRENCY": {
+            "type": "string"
+          },
+          "LCY_AMOUNT": {
+            "type": "number"
+          },
+          "AMOUNT": {
+            "type": "number"
+          },
+          "DATE": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "CE_CODE",
+          "CE_TYPE",
+          "CURRENCY",
+          "LCY_AMOUNT",
+          "AMOUNT",
+          "DATE"
+        ]
+      },
+      "ListAllLiveCashResponse": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "number"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LiveCash"
+            }
+          }
+        },
+        "required": [
+          "count",
+          "data"
+        ]
+      },
+      "AdLoginDto": {
+        "type": "object",
+        "properties": {
+          "loginId": {
+            "type": "string",
+            "description": "Employee ID."
+          },
+          "password": {
+            "type": "string",
+            "description": "SmartHR Password."
+          }
+        },
+        "required": [
+          "loginId",
+          "password"
+        ]
+      },
+      "ResUser": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ]
+      },
+      "ResBranch": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "numericCode": {
+            "type": "string"
+          },
+          "numberCode": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "code",
+          "numericCode",
+          "numberCode",
+          "name"
+        ]
+      },
+      "AdLoginResponseDto": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string"
+          },
+          "expireTime": {
+            "type": "number"
+          },
+          "typeOfUser": {
+            "type": "string",
+            "enum": [
+              "CMO",
+              "BranchAdmin",
+              "HubCurrency"
+            ]
+          },
+          "user": {
+            "$ref": "#/components/schemas/ResUser"
+          },
+          "branch": {
+            "$ref": "#/components/schemas/ResBranch"
+          }
+        },
+        "required": [
+          "token",
+          "expireTime",
+          "typeOfUser",
+          "user",
+          "branch"
+        ]
+      }
+    }
+  }
+}
