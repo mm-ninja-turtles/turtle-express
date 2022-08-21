@@ -32,7 +32,7 @@ export interface PathReturnType {
 	 * ```
 	 */
 	handler: <
-		Params extends ZodType,
+		Params extends ZodType | undefined,
 		Query extends ZodType,
 		Body extends ZodType,
 		Ctx,
@@ -224,7 +224,7 @@ export function createPath(
 
 	// create a handler function to bind to the router
 	const handler = <
-		Params extends ZodType,
+		Params extends ZodType | undefined,
 		Query extends ZodType,
 		Body extends ZodType,
 		Ctx,

@@ -5,13 +5,13 @@ import type { Method, ResponseShape } from '../types'
 import { handlerFuncSteps } from './handler-function-steps'
 
 export interface Context<
-	Params extends ZodType,
+	Params extends ZodType | undefined,
 	Query extends ZodType,
 	Body extends ZodType,
 > {
-	params: z.infer<Params>
-	query: z.infer<Query>
-	body: z.infer<Body>
+	params: Params extends ZodType ? z.infer<Params> : unknown
+	query: z.infer<Query> | undefined
+	body: z.infer<Body> | undefined
 }
 
 export interface InternalContext {
@@ -25,7 +25,7 @@ export interface HandlerMeta {
 
 export type ResolverArgs<
 	UncontrolledResolver extends boolean,
-	Params extends ZodType,
+	Params extends ZodType | undefined,
 	Query extends ZodType,
 	Body extends ZodType,
 	Ctx,
@@ -73,7 +73,7 @@ export type ResolverArgs<
  * ```
  */
 export interface HandlerOptions<
-	Params extends ZodType,
+	Params extends ZodType | undefined,
 	Query extends ZodType,
 	Body extends ZodType,
 	Ctx,
@@ -441,7 +441,7 @@ export interface HandlerOptions<
 }
 
 export const createHandler = <
-	Params extends ZodType,
+	Params extends ZodType | undefined,
 	Query extends ZodType,
 	Body extends ZodType,
 	Ctx,
@@ -872,8 +872,7 @@ export const createHandler = <
 						}
 						// change success status to false if result key status is
 						// greater than or equal to 400
-						else if (resolverValidation && statusCode >= 400) {
-							resolverValidation.success = false
+						else if (resolverValidation.success === true && statusCode >= 400) {
 							message = 'Failed.'
 						}
 
@@ -882,7 +881,10 @@ export const createHandler = <
 							statusCode,
 							success: resolverValidation.success,
 							message,
-							data: resolverValidation.data ?? null,
+							data:
+								resolverValidation.success === true
+									? resolverValidation.data
+									: null,
 							error:
 								resolverValidation.success === true
 									? null

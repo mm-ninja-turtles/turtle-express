@@ -30,7 +30,7 @@ requestValidation.handler({
 		200: z.string(),
 	},
 	resolver({ ctx }) {
-		const { id } = ctx.params
+		const id = ctx.params?.id
 
 		console.log(ctx.body)
 

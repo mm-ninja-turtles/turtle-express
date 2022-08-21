@@ -17,7 +17,7 @@
 		"ts-node": "^10.9.1",
 		"turtle-express": "workspace:*",
 		"typescript": "^4.7.4",
-		"zod": "^3.17.9"
+		"zod": "^3.18.0"
 	},
 	"devDependencies": {
 		"@types/express": "^4.17.13",
