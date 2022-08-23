@@ -4,6 +4,7 @@ import { router } from '../../router'
 export const hello = router.path('/hello')
 
 hello.handler({
+	id: 'GetHello',
 	method: 'get',
 	response: {
 		200: z.string(),
@@ -14,6 +15,7 @@ hello.handler({
 })
 
 hello.handler({
+	id: 'PostHello',
 	method: 'post',
 	response: {
 		200: z.object({

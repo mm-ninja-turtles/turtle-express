@@ -4,6 +4,7 @@ import { router } from '../router'
 export const fetchApi = router.path('/fetch-api')
 
 fetchApi.handler({
+	id: 'FetchApiExample',
 	method: 'get',
 	response: {
 		200: z.any(),

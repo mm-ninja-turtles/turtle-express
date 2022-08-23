@@ -4,6 +4,7 @@ import { router } from '../router'
 export const requestValidation = router.path('/request-validation/:id')
 
 requestValidation.handler({
+	id: 'RequestValidation',
 	method: 'post',
 	request: {
 		params: z.object({
@@ -30,9 +31,9 @@ requestValidation.handler({
 		200: z.string(),
 	},
 	resolver({ ctx }) {
-		const id = ctx.params?.id
+		const { id } = ctx.params
 
-		console.log(ctx.body)
+		console.log(ctx)
 
 		return {
 			200: 'request validation id: ' + id + ' and type is: ' + typeof id,

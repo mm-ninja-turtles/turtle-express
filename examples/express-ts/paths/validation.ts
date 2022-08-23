@@ -4,6 +4,7 @@ import { router } from '../router'
 export const validation = router.path('/validation')
 
 validation.handler({
+	id: 'Validation',
 	method: 'get',
 	response: {
 		200: z.object({

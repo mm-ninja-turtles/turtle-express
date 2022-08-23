@@ -4,6 +4,7 @@ import { hello } from '.'
 export const helloName = hello.path('/:name')
 
 helloName.handler({
+	id: 'GetHelloName',
 	method: 'get',
 	request: {
 		params: z.object({
