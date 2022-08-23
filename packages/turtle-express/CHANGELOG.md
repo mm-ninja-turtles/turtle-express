@@ -1,5 +1,18 @@
 # turtle-express
 
+## 0.2.0
+
+### Minor Changes
+
+- Breaking Changes:
+
+  - removed `guard` option
+  - added `middlewares` in `path` and `handler`
+  - all rewrite of internal core module
+  - better typed system
+  - `handler` options type are now modular
+  - new helper `getContext` function
+
 ## 0.1.5
 
 ### Patch Changes
