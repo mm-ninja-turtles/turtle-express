@@ -55,6 +55,29 @@ importers:
       '@types/express': 4.17.13
       '@types/node': 18.0.6
 
+  examples/my-project:
+    specifiers:
+      '@types/express': ^4.17.13
+      '@types/node': ^18.0.6
+      cross-fetch: ^3.1.5
+      express: ^4.18.1
+      nodemon: ^2.0.19
+      ts-node: ^10.9.1
+      turtle-express: workspace:*
+      typescript: ^4.7.4
+      zod: ^3.18.0
+    dependencies:
+      cross-fetch: 3.1.5
+      express: 4.18.1
+      nodemon: 2.0.19
+      ts-node: 10.9.1_vugoqbkjnxc3odpmeek2omb3o4
+      turtle-express: link:../../packages/turtle-express
+      typescript: 4.7.4
+      zod: 3.18.0
+    devDependencies:
+      '@types/express': 4.17.13
+      '@types/node': 18.7.3
+
   packages/turtle-express:
     specifiers:
       '@types/express': ^4.17.13
@@ -684,7 +707,6 @@ packages:
 
   /@types/node/18.7.3:
     resolution: {integrity: sha512-LJgzOEwWuMTBxHzgBR/fhhBOWrvBjvO+zPteUgbbuQi80rYIZHrk1mNbRUqPZqSLP2H7Rwt1EFLL/tNLD1Xx/w==}
-    dev: true
 
   /@types/normalize-package-data/2.4.1:
     resolution: {integrity: sha512-Gj7cI7z+98M282Tqmp2K5EIsoouUEzbBJhQQzDE3jSIRk6r9gsz0oUokqIUR4u1R3dMHo0pDHM7sNOHyhulypw==}
@@ -5072,7 +5094,6 @@ packages:
       typescript: 4.7.4
       v8-compile-cache-lib: 3.0.1
       yn: 3.1.1
-    dev: true
 
   /tsc-alias/1.7.0:
     resolution: {integrity: sha512-n/K6g8S7Ec7Y/A2Z77Ikp2Uv1S1ERtT63ni69XV4W1YPT4rnNmz8ItgIiJYvKfFnKfqcZQ81UPjoKpMTxaC/rg==}
