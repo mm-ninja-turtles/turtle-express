@@ -1,5 +1,14 @@
 # turtle-express
 
+## 0.2.1
+
+### Patch Changes
+
+- fcf54dc: Bugfix #59
+
+  - internal lifecycle handler precise next state handling
+  - improved `validation` handler example in express-ts example project
+
 ## 0.2.0
 
 ### Minor Changes
