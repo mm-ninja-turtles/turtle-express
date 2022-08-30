@@ -5,7 +5,7 @@ import { paths } from './paths/_index'
 
 const port = 8080
 const app = express()
-router.use(express.urlencoded())
+router.use(express.urlencoded({ extended: false }))
 router.use(express.json())
 router.setup(app, { paths })
 
